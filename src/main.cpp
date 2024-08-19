@@ -36,16 +36,24 @@ std::vector<gpio_num_t> COLS = {COLa, COLb, COLc, COLd, COLe, COLf, COLg, COLh};
 
 //Variables para la interrupciones
 TimerHandle_t timer_isr;
-unsigned int interval = 500;   //tiempo de interrupción en milisegundos
+unsigned int interval = 50;   //tiempo de interrupción en milisegundos
 int timerID = 1;
 
 static const char* TAG = "Main";
 
 bool in_out_state = true;   //Variable de cambio E/S
 
-//Vector Lectura Filas
-std::vector<uint8_t> lecRows(ROWS.size());
-std::vector<uint8_t> lecCols(COLS.size());
+/*
+En estos vectores se guardan la salida actual para tener las
+coordenadas de la posicion detectada en cada iteración
+*/
+//Vector guardar las salidas
+uint8_t outRows = 0;
+uint8_t outCols = 0;
+
+//Vector guardar las entradas
+std::vector<uint8_t> lecRows(ROWS.size() + 1);
+std::vector<uint8_t> lecCols(COLS.size() + 1);
 
 //Matriz Deteccion
 std::vector<std::vector<uint8_t>> matChess = {
@@ -62,14 +70,16 @@ std::vector<std::vector<uint8_t>> matChess = {
 //Prototipo de Funciones
 void activacionSalidas(std::vector<gpio_num_t> Salidas);
 void WMatrixChess(void);
+void imprimirVector(std::vector<uint8_t> vector);
 
 //-----------------------------Interrupciones-----------------------------
 
 //Función de Interrupción Lectura
 void ISR_funcionLectura(TimerHandle_t timer){
+    ESP_LOGI(TAG, "------------------------------");
     //Lectura de los Sensores
     if(in_out_state){
-        //Lectura de Columnas
+        //Leer Columnas
         lecCols[0] = gpio_get_level(COLa);
         lecCols[1] = gpio_get_level(COLb);
         lecCols[2] = gpio_get_level(COLc);
@@ -78,8 +88,10 @@ void ISR_funcionLectura(TimerHandle_t timer){
         lecCols[5] = gpio_get_level(COLf);
         lecCols[6] = gpio_get_level(COLg);
         lecCols[7] = gpio_get_level(COLh);
+        lecCols[8] = outRows;
+        imprimirVector(lecCols);
     }else{
-        //Lectura de Filas
+        //Leer Filas
         lecRows[0] = gpio_get_level(ROW1);
         lecRows[1] = gpio_get_level(ROW2);
         lecRows[2] = gpio_get_level(ROW3);
@@ -88,8 +100,9 @@ void ISR_funcionLectura(TimerHandle_t timer){
         lecRows[5] = gpio_get_level(ROW6);
         lecRows[6] = gpio_get_level(ROW7);
         lecRows[7] = gpio_get_level(ROW8);
-    }
-    ESP_LOGI(TAG, "Datos Guardados");
+        lecRows[8] = outCols;           
+        imprimirVector(lecRows);
+    }   
 }
 
 //-----------------------------MAIN-----------------------------
@@ -110,35 +123,42 @@ void app_main(){
     );
     //MSG error de configuración
     if(timer_isr == NULL){
-        ESP_LOGI(TAG, "Timer no fue creado");
+        ESP_LOGW(TAG, "Timer no fue creado");
     }else{
         if(xTimerStart(timer_isr, 0) != pdPASS){
-            ESP_LOGI(TAG, "El timer no fue habilitado");
+            ESP_LOGW(TAG, "El timer no fue habilitado");
         }
     }
 
     //Bucle 
     while(1){
         if(in_out_state){
-            //Detección de Columnas
+            //Activacion de Salidas - Rows
             activacionSalidas(ROWS);
         }else{
-            //Deteccion de Filas
+            //Activacion de Salidas - Cols
             activacionSalidas(COLS);
         }
-    }
+    }   
 }
 
 //-----------------------------FUNCIONES-----------------------------
 /*Funcion para activar Salidas*/
 void activacionSalidas(std::vector<gpio_num_t> Salidas){
     for(size_t i=0; i<Salidas.size(); i++){
-        gpio_set_level(Salidas[i], 1);
-        gpio_set_level((i==0) ? Salidas[7] : Salidas[i-1], 0);
-        
-        vTaskDelay(pdMS_TO_TICKS(50));
+        gpio_set_level(Salidas[i], 1);                          //Activacion de la salida actual
+        //Guardamos la posicion de la activacion actual
+        if(in_out_state){
+            outRows = i;
+        }else{
+            outCols = i;
+        }
+        gpio_set_level((i==0) ? Salidas[7] : Salidas[i-1], 0);  //Desactivamos la salida anterior
+
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
     gpio_set_level(Salidas[7], 0);
+    //Cambiar estado de E/S
     in_out_state = !in_out_state;
     setupGPIOs(ROWS, COLS, in_out_state);
 }
@@ -149,5 +169,12 @@ void WMatrixChess(){
         for(size_t j=0; j<8; j++){
             matChess[i][j] = (lecRows[i] == lecCols[j]) ? 1:0; 
         }
+    }
+}
+
+/*Funcion para imprimir vectores*/
+void imprimirVector(std::vector<uint8_t> vector){
+    for(size_t i=0; i<vector.size(); i++){
+        ESP_LOGI(TAG, "%u", vector[i]);
     }
 }
