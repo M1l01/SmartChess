@@ -41,21 +41,17 @@ int timerID = 1;
 
 static const char* TAG = "Main";
 
-bool SaveState = true;
-
 //Vector guardar las salidas
 uint8_t outRows = 0;
-uint8_t outCols = 0;
 
-//Matriz de detección
-std::vector<std::vector<uint8_t>> matChessRowsIn(8, std::vector<uint8_t>(8));   //Rows como Entradas - ESP32
-std::vector<std::vector<uint8_t>> matChessColsIn(8, std::vector<uint8_t>(8));   //Cols como Entradas - ESP32
-std::vector<std::vector<uint8_t>> matChessConcat(8, std::vector<uint8_t>(8));   //Concatenación de Matrices
+//Vector de Detección de Entradas - Columnas
+std::vector<uint8_t> DetColumns(8); //Detectará las columnas y almacenará en la matChess
+
+//Matriz de Ajedrez para almacenar la detección
+std::vector<std::vector<uint8_t>> matChess(8, std::vector<uint8_t>(8));
 
 //Prototipo de Funciones
 void activacionSalidas(std::vector<gpio_num_t> Salidas);
-void formarMatrix(void);
-void ConcatArrays(void);
 void imprimirVector(std::vector<uint8_t> vector);
 void imprimirMatrix(std::vector<std::vector<uint8_t>> matriz);
 
@@ -63,9 +59,7 @@ void imprimirMatrix(std::vector<std::vector<uint8_t>> matriz);
 
 //Función de Interrupción Lectura
 void ISR_funcionLectura(TimerHandle_t timer){
-    formarMatrix();//Formar Matriz de Detección
-    ConcatArrays();//Concatenación de arrays de Detección
-    //imprimirMatrix(matChessConcat);
+    ESP_LOGI(TAG, "Detección de Piezas");
 }
 
 //-----------------------------MAIN-----------------------------
@@ -73,7 +67,7 @@ extern "C" void app_main();
 
 void app_main(){
     //Setup
-    setupGPIOs(ROWS, COLS, SaveState);
+    setupGPIOs(ROWS, COLS);
     ESP_LOGI(TAG, "GPIOS Inicializados");
 
     //Configuración Timer
@@ -95,8 +89,8 @@ void app_main(){
 
     //Bucle 
     while(1){
-        //Activación de Filas y Columnas
-        (SaveState) ? activacionSalidas(ROWS) : activacionSalidas(COLS);
+        //Activación de Filas
+        activacionSalidas(ROWS);
     }   
 }
 
@@ -105,55 +99,12 @@ void app_main(){
 void activacionSalidas(std::vector<gpio_num_t> Salidas){
     for(size_t i=0; i<Salidas.size(); i++){
         gpio_set_level(Salidas[i], 1);                          //Activación de la salida actual
-        //Guardamos la posición de la activación actual
-        if(SaveState){
-            outRows = i;
-        }else{
-            outCols = i;
-        }
+        outRows = i;                                            //Guardamos la posición de la activación actual
         gpio_set_level((i==0) ? Salidas[7] : Salidas[i-1], 0);  //Desactivamos la salida anterior
 
         vTaskDelay(pdMS_TO_TICKS(150));
     }
     gpio_set_level(Salidas[7], 0);
-    //Cambiamos E/S
-    SaveState = !SaveState;
-    setupGPIOs(ROWS, COLS, SaveState);
-}
-
-/*Función para armar la matrixChess con las detecciones de los sensores y las filas*/
-void formarMatrix(void){
-    if(SaveState){
-        ESP_LOGI(TAG, "Fila Activada: %u", outRows);
-        for(size_t i=0; i<ROWS.size(); i++){
-            //Filas -> Salidas
-            //Columnas -> Entradas
-            matChessColsIn[outRows][i] = gpio_get_level(COLS[i]);
-        }
-        imprimirMatrix(matChessColsIn);
-    }else{
-        ESP_LOGI(TAG, "Columna Activada: %u", outCols);
-        for(size_t i=0; i<COLS.size(); i++){
-            //Filas -> Entradas
-            //Columnas -> Salidas
-            matChessRowsIn[i][outCols] = gpio_get_level(ROWS[i]);
-        }
-        imprimirMatrix(matChessRowsIn);
-    }
-}
-
-/*Función para concatenar la detección*/
-void ConcatArrays(void){
-    //Recorremos las matrices
-    for(size_t i=0; i<matChessRowsIn.size(); i++){  //Recorrermos Filas
-        for(size_t j=0; j<matChessRowsIn[0].size(); j++){   //Recorremos Columnas
-            if((matChessRowsIn[i][j] == 1) || (matChessColsIn[i][j] == 1)){
-                matChessConcat[i][j] = 1;
-            }else{
-                matChessConcat[i][j] = 0;
-            }
-        }
-    }
 }
 
 /*Función para imprimir vectores*/
