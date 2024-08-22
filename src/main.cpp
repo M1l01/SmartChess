@@ -63,7 +63,6 @@ void imprimirMatrix(std::vector<std::vector<uint8_t>> matriz);
 
 //Función de Interrupción Lectura
 void ISR_funcionLectura(TimerHandle_t timer){
-    ESP_LOGI(TAG, "--------MatrixChess---------");
     formarMatrix();//Formar Matriz de Detección
     ConcatArrays();//Concatenación de arrays de Detección
     //imprimirMatrix(matChessConcat);
@@ -125,6 +124,7 @@ void activacionSalidas(std::vector<gpio_num_t> Salidas){
 /*Función para armar la matrixChess con las detecciones de los sensores y las filas*/
 void formarMatrix(void){
     if(SaveState){
+        ESP_LOGI(TAG, "Fila Activada: %u", outRows);
         for(size_t i=0; i<ROWS.size(); i++){
             //Filas -> Salidas
             //Columnas -> Entradas
@@ -132,6 +132,7 @@ void formarMatrix(void){
         }
         imprimirMatrix(matChessColsIn);
     }else{
+        ESP_LOGI(TAG, "Columna Activada: %u", outCols);
         for(size_t i=0; i<COLS.size(); i++){
             //Filas -> Entradas
             //Columnas -> Salidas
