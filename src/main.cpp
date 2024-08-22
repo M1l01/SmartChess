@@ -45,13 +45,15 @@ static const char* TAG = "Main";
 uint8_t outRows = 0;
 
 //Vector de Detección de Entradas - Columnas
-std::vector<uint8_t> DetColumns(8); //Detectará las columnas y almacenará en la matChess
+std::vector<uint8_t> DetColumns = {0,0,0,0,0,0,0,0}; //Detectará las columnas y almacenará en la matChess
 
 //Matriz de Ajedrez para almacenar la detección
 std::vector<std::vector<uint8_t>> matChess(8, std::vector<uint8_t>(8));
 
 //Prototipo de Funciones
 void activacionSalidas(std::vector<gpio_num_t> Salidas);
+void deteccionColumnas(void);
+//void almacenarValores(void);
 void imprimirVector(std::vector<uint8_t> vector);
 void imprimirMatrix(std::vector<std::vector<uint8_t>> matriz);
 
@@ -59,7 +61,13 @@ void imprimirMatrix(std::vector<std::vector<uint8_t>> matriz);
 
 //Función de Interrupción Lectura
 void ISR_funcionLectura(TimerHandle_t timer){
-    ESP_LOGI(TAG, "Detección de Piezas");
+    //ESP_LOGI(TAG, "Detección de Piezas");
+    //llamamos a la funcion para lectura de columnas
+    ESP_LOGI(TAG, "Fila Activada: %u", outRows);
+    deteccionColumnas();
+    imprimirVector(DetColumns);
+    //llamamos a la función para almacenar valores
+
 }
 
 //-----------------------------MAIN-----------------------------
@@ -107,10 +115,27 @@ void activacionSalidas(std::vector<gpio_num_t> Salidas){
     gpio_set_level(Salidas[7], 0);
 }
 
+/*Función para la detección de Columnas*/
+void deteccionColumnas(void){
+    //Agregamos cada lectura de la columna al vector
+    for(size_t i=0; i<DetColumns.size(); i++){
+        DetColumns[i] = gpio_get_level(COLS[i]);    //Lectura de los Sensores
+    }
+}
+
+/*Función para almacenar las columnas leidas en la matríz*/
+/*void almacenarValores(void){
+    //Recorremos la matriz de almacenamiento
+    //Mi variable para recorrer filas es outRows
+    for(size_t c=0; c<matChess[0].size(); c++){ //Recorremos solo las columnas
+        matChess[outRows][c] = DetColumns[c];
+    }
+}*/
+
 /*Función para imprimir vectores*/
 void imprimirVector(std::vector<uint8_t> vector){
-    ESP_LOGI(TAG, "F: %u C: %u %u %u %u %u %u %u %u", vector[0], vector[1], vector[2],
-             vector[3], vector[4], vector[5], vector[6], vector[7], vector[8]);
+    ESP_LOGI(TAG, "%u %u %u %u %u %u %u %u", vector[0], vector[1], vector[2],
+             vector[3], vector[4], vector[5], vector[6], vector[7]);
 }
 
 /*Función para imprimir la matriz*/
