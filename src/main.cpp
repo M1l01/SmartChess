@@ -53,7 +53,7 @@ std::vector<std::vector<uint8_t>> matChess(8, std::vector<uint8_t>(8));
 //Prototipo de Funciones
 void activacionSalidas(std::vector<gpio_num_t> Salidas);
 void deteccionColumnas(void);
-//void almacenarValores(void);
+void almacenarValores(void);
 void imprimirVector(std::vector<uint8_t> vector);
 void imprimirMatrix(std::vector<std::vector<uint8_t>> matriz);
 
@@ -63,11 +63,12 @@ void imprimirMatrix(std::vector<std::vector<uint8_t>> matriz);
 void ISR_funcionLectura(TimerHandle_t timer){
     //ESP_LOGI(TAG, "Detección de Piezas");
     //llamamos a la funcion para lectura de columnas
-    ESP_LOGI(TAG, "Fila Activada: %u", outRows);
+    //ESP_LOGI(TAG, "Fila Activada: %u", outRows);
     deteccionColumnas();
-    imprimirVector(DetColumns);
+    //imprimirVector(DetColumns);
     //llamamos a la función para almacenar valores
-
+    almacenarValores();
+    imprimirMatrix(matChess);
 }
 
 //-----------------------------MAIN-----------------------------
@@ -124,13 +125,13 @@ void deteccionColumnas(void){
 }
 
 /*Función para almacenar las columnas leidas en la matríz*/
-/*void almacenarValores(void){
+void almacenarValores(void){
     //Recorremos la matriz de almacenamiento
     //Mi variable para recorrer filas es outRows
     for(size_t c=0; c<matChess[0].size(); c++){ //Recorremos solo las columnas
         matChess[outRows][c] = DetColumns[c];
     }
-}*/
+}
 
 /*Función para imprimir vectores*/
 void imprimirVector(std::vector<uint8_t> vector){
