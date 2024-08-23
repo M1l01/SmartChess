@@ -6,7 +6,7 @@
 #include <driver/gpio.h>
 #include <esp_types.h>
 #include <esp_log.h>
-#include "gpio_config.h"
+#include "drivers/gpio_config.h"
 #include <vector>
 #include <string>
 
