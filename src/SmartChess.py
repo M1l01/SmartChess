@@ -51,40 +51,20 @@ for f in range(0,8):
         else:
             canvas.create_rectangle(c*dimCasilla, f*dimCasilla, c*dimCasilla+100, f*dimCasilla+100, fill="#000000")
 
-# *Labels para identificación de coords 
-lblA = tk.Label(wdInicio, text="A", bg="#4C330C", fg="#ffffff",
-                font=("Calisto MT", 12, "bold"))
-lblA.place(x=640, y=960)
-lblB = tk.Label(wdInicio, text="B", bg="#4C330C", fg="#ffffff",
-                font=("Calisto MT", 12, "bold"))
-lblB.place(x=740, y=960)
-lblC = tk.Label(wdInicio, text="C", bg="#4C330C", fg="#ffffff",
-                font=("Calisto MT", 12, "bold"))
-lblC.place(x=840, y=960)
-lblD = tk.Label(wdInicio, text="D", bg="#4C330C", fg="#ffffff",
-                font=("Calisto MT", 12, "bold"))
-lblD.place(x=940, y=960)
-lblE = tk.Label(wdInicio, text="E", bg="#4C330C", fg="#ffffff",
-                font=("Calisto MT", 12, "bold"))
-lblE.place(x=1040, y=960)
-lblF = tk.Label(wdInicio, text="F", bg="#4C330C", fg="#ffffff",
-                font=("Calisto MT", 12, "bold"))
-lblF.place(x=1140, y=960)
-lblG = tk.Label(wdInicio, text="G", bg="#4C330C", fg="#ffffff",
-                font=("Calisto MT", 12, "bold"))
-lblG.place(x=1240, y=960)
-lblH = tk.Label(wdInicio, text="H", bg="#4C330C", fg="#ffffff",
-                font=("Calisto MT", 12, "bold"))
-lblH.place(x=1340, y=960)
-
+# *Labels para identificación de coords
+# LETRAS
+lblLetters = tk.Label(wdInicio, text="A\t         B\t\t  C\t           D\t\t     E\t             F\t\t     G\t\tH",
+                bg="#4C330C", fg="#ffffff", font=("Calisto MT", 12, "bold"))
+lblLetters.place(x=640, y=960)
+# NUMEROS
 lbl8 = tk.Label(wdInicio, text="8", bg="#4C330C", fg="#ffffff",
                 font=("Calisto MT", 14, "bold"))
 lbl8.place(x=575, y=185)
 lbl7 = tk.Label(wdInicio, text="7", bg="#4C330C", fg="#ffffff",
-                font=("Calisto MT", 14, "bold"))
+                 font=("Calisto MT", 14, "bold"))
 lbl7.place(x=575, y=285)
 lbl6 = tk.Label(wdInicio, text="6", bg="#4C330C", fg="#ffffff",
-                font=("Calisto MT", 14, "bold"))
+                 font=("Calisto MT", 14, "bold"))
 lbl6.place(x=575, y=385)
 lbl5 = tk.Label(wdInicio, text="5", bg="#4C330C", fg="#ffffff",
                 font=("Calisto MT", 14, "bold"))
