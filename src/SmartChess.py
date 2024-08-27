@@ -24,11 +24,11 @@ lblbgTitle.place(x=0, y=0, width=1920, height=100)
 
 # *Titulo Label
 #Configuracion de nueva fuente
-image = Image.new('RGB', (400,85), color="#ffffff")
+image = Image.new('RGB', (400,85), color="#332000")
 dirFont = "D://MILO//PORTAFOLIO_PROYECTOS//SmartChess//customFont//KOMIKAX_.ttf"
 customfont = ImageFont.truetype(dirFont, 48)
 draw = ImageDraw.Draw(image)
-draw.text((30,1), "Smart Chess", font=customfont, fill="#332000")
+draw.text((30,1), "Smart Chess", font=customfont, fill="#ffffff")
 #image_cropped = image.crop((100,20,400,80))
 photo = ImageTk.PhotoImage(image)
 
@@ -39,17 +39,16 @@ lblTitle.place(x=750, y=5)
 lblTablero = tk.Label(wdInicio, text="", bg="#4C330C")
 lblTablero.place(x=560, y=110, width=880, height=880)
 
-canvas = Canvas(wdInicio, width=800, height=800)
+canvas = Canvas(wdInicio, width=800, height=800, highlightthickness=0)
 canvas.place(x=600, y=150)
 
 dimCasilla = 100
-flagColor = True
 for f in range(0,8):
     for c in range(0,8):
         if ((c%2==0) and (f%2==0)) or ((c%2!=0) and (f%2!=0)):
-            canvas.create_rectangle(c*dimCasilla, f*dimCasilla, c*dimCasilla+100, f*dimCasilla+100, fill="#ffffff")
+            canvas.create_rectangle(c*dimCasilla, f*dimCasilla, c*dimCasilla+100, f*dimCasilla+100, fill="#ffffff", outline="#ffffff")
         else:
-            canvas.create_rectangle(c*dimCasilla, f*dimCasilla, c*dimCasilla+100, f*dimCasilla+100, fill="#000000")
+            canvas.create_rectangle(c*dimCasilla, f*dimCasilla, c*dimCasilla+100, f*dimCasilla+100, fill="#000000", outline="#000000")
 
 # *Labels para identificación de coords
 # LETRAS
@@ -57,29 +56,12 @@ lblLetters = tk.Label(wdInicio, text="A\t         B\t\t  C\t           D\t\t    
                 bg="#4C330C", fg="#ffffff", font=("Calisto MT", 12, "bold"))
 lblLetters.place(x=640, y=960)
 # NUMEROS
-lbl8 = tk.Label(wdInicio, text="8", bg="#4C330C", fg="#ffffff",
-                font=("Calisto MT", 14, "bold"))
-lbl8.place(x=575, y=185)
-lbl7 = tk.Label(wdInicio, text="7", bg="#4C330C", fg="#ffffff",
-                 font=("Calisto MT", 14, "bold"))
-lbl7.place(x=575, y=285)
-lbl6 = tk.Label(wdInicio, text="6", bg="#4C330C", fg="#ffffff",
-                 font=("Calisto MT", 14, "bold"))
-lbl6.place(x=575, y=385)
-lbl5 = tk.Label(wdInicio, text="5", bg="#4C330C", fg="#ffffff",
-                font=("Calisto MT", 14, "bold"))
-lbl5.place(x=575, y=485)
-lbl4 = tk.Label(wdInicio, text="4", bg="#4C330C", fg="#ffffff",
-                font=("Calisto MT", 14, "bold"))
-lbl4.place(x=575, y=585)
-lbl3 = tk.Label(wdInicio, text="3", bg="#4C330C", fg="#ffffff",
-                font=("Calisto MT", 14, "bold"))
-lbl3.place(x=575, y=685)
-lbl2 = tk.Label(wdInicio, text="2", bg="#4C330C", fg="#ffffff",
-                font=("Calisto MT", 14, "bold"))
-lbl2.place(x=575, y=785)
-lbl1 = tk.Label(wdInicio, text="1", bg="#4C330C", fg="#ffffff",
-                font=("Calisto MT", 14, "bold"))
-lbl1.place(x=575, y=885)
+lblNumeros = Canvas(wdInicio, width=40, height=800, highlightthickness=0)
+lblNumeros.place(x=560, y=150)
+contador = 8
+for fila in range(0, 8):
+    lblNumeros.create_rectangle(0, fila*100, 40, fila*100+100, fill="#4C330C", outline="#4C330C")
+    lblNumeros.create_text(20, fila*100+50, text=str(contador), fill="#ffffff", font=("Calisto MT", 14, "bold"))
+    contador -= 1
 
 wdInicio.mainloop()
