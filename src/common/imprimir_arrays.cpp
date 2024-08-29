@@ -1,5 +1,4 @@
 #include "common/imprimir_arrays.h"
-#include <esp_types.h>
 #include <esp_log.h>
 #include <vector>
 
