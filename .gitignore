@@ -3,6 +3,4 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
-src/__pycache__
 src/pruebas.py
-src/move_img.py
