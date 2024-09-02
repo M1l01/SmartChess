@@ -19,10 +19,14 @@
 #include "common/imprimir_arrays.h"
 #include "common/columns_detection.h"
 #include <vector>
+#include <cstring>
+#include <string>
 
 #define WIFI_SSID "Netlife-ISABELLA"
 #define WIFI_PASS "Isaval0102"
 #define PORT 3333
+
+#define CHUNK_SIZE 16 //Tamaño del paquete en bytes
 
 //Vector de Filas
 std::vector<gpio_num_t> ROWS = {GPIO_NUM_4, GPIO_NUM_13, GPIO_NUM_14, GPIO_NUM_15,
@@ -55,6 +59,7 @@ std::vector<std::vector<uint8_t>> matChess(8, std::vector<uint8_t>(8));
 void activarFilasTask(void *pvParameters);
 void wifi_init_sta(void);
 void tcp_server_task(void *pvParameters);
+void enviarDatosPaquetes(int sock, const uint8_t* datos, size_t tam);
 
 //-----------------------------Interrupciones-----------------------------
 
@@ -191,12 +196,37 @@ void tcp_server_task(void *pvParameters) {
             } else {
                 rx_buffer[len] = 0;
                 ESP_LOGI(TAGServer, "Recibido: %s", rx_buffer);
-                
-                char *response = "Hola desde ESP32";
-                send(sock, response, strlen(response), 0);             
+
+                //Envío de la matriz de posiciones
+                uint8_t paqueteDatos[64]; //Matriz de 8x8 a Array de 64 elementos
+                int idx = 0;    //Indice de paquete de datos
+                //Transformar Matriz a Array
+                for(size_t i=0; i<matChess.size(); i++){
+                    for(size_t j=0; j<matChess[0].size(); j++){
+                        paqueteDatos[idx] = matChess[i][j];
+                        idx++;
+                    }
+                }
+                enviarDatosPaquetes(sock, paqueteDatos, sizeof(paqueteDatos));
+                ESP_LOGI(TAGServer, "Datos Enviados");          
             }
         }
         shutdown(sock, 0);
         close(sock);
+    }
+}
+
+void enviarDatosPaquetes(int sock, const uint8_t* datos, size_t tam){
+    size_t sent = 0;
+    while(sent < tam){
+        size_t remaining = tam - sent;
+        size_t toSend = (remaining > CHUNK_SIZE) ? CHUNK_SIZE : remaining;
+
+        int result = send(sock, datos + sent, toSend, 0);
+        if(result < 0){
+            ESP_LOGE(TAGServer, "Error al enviar datos: %d", errno);
+            break;
+        }
+        sent += result;
     }
 }

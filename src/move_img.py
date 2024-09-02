@@ -5,13 +5,14 @@ class MoverImagen:
     def __init__(self, ventana, ruta_imagen):
         self.ventana = ventana
         self.ventana.title("Mover Imagen con Mouse")
+        self.ventana.config(bg="#332000")
 
         # Cargar la imagen
         imagen = Image.open(ruta_imagen)
         self.imagen_tk = ImageTk.PhotoImage(imagen)
 
         # Crear un canvas y añadir la imagen
-        self.canvas = tk.Canvas(ventana, width=1000, height=1000)
+        self.canvas = tk.Canvas(ventana, width=1000, height=1000, bg="#332000", highlightthickness=0)
         self.canvas.pack()
         self.imagen_en_canvas = self.canvas.create_image(1000, 1000, image=self.imagen_tk)
 
@@ -35,7 +36,7 @@ ventana_principal = tk.Tk()
 
 # Crear una instancia de la clase MoverImagen
 # Asegúrate de reemplazar 'ruta/a/tu/imagen.png' con la ruta real de tu imagen
-app = MoverImagen(ventana_principal, 'D://MILO//PORTAFOLIO_PROYECTOS//SmartChess//src//images//dama.png')
+app = MoverImagen(ventana_principal, 'D://MILO//PORTAFOLIO_PROYECTOS//SmartChess//src//images//rey_blanco.png')
 
 # Iniciar el bucle principal de la aplicación
 ventana_principal.mainloop()

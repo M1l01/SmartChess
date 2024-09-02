@@ -1,4 +1,6 @@
 import socket
+import struct
+import math
 
 class ESP32Client:
     def __init__(self, host, port):
@@ -23,35 +25,56 @@ class ESP32Client:
             except Exception as e:
                 print(f"Error al enviar datos: {e}")
     
-    def recibir_msg(self, buffer_size=1024):
+    def recibir_msg(self, buffer_size=16, total_size = 64):
         #Recibe un mensaje del servidor
         if self.socket:
             try:
-                data = self.socket.recv(buffer_size)
-                if data:
-                    print(f"Recibido: {data.decode()}")
+                data = b""
+                while len(data) < total_size:
+                    paqueteDatos = self.socket.recv(buffer_size)
+                    if not paqueteDatos:
+                        print("No se han recibido datos")
+                        return
+                    data += paqueteDatos
+
+                if len(data) == total_size:
+                    try:
+                        array = struct.unpack('64B', data)
+                        array = list(array)
+                        matChess = []
+                        contador = 0
+                        for i in range(0, int(math.sqrt(len(array)))): #Len array -> 64
+                            matChess.append([]) #Agregamos una lista vacía
+                            for j in range(0, int(math.sqrt(len(array)))):
+                                matChess[i].append(array[contador])
+                                contador+=1
+                        return matChess
+
+                    except struct.error as se:
+                        print(f"Error al desempaquetar los datos {se}")
+                        return None
                 else:
-                    print(f"No se ha recibido datos")
+                    print(f"Datos recibidos incompletos se esperaban {buffer_size} bytes")
+                    return None
+                
             except Exception as e:
                 print(f"Error al recibir datos: {e}")
+                return None
+
     def close(self):
         if self.socket:
             self.socket.close()
             print("Conexion cerrada")
 
-class ESP32Comunication:
-    def __init__(self, host, port):
-        self.client = ESP32Client(host, port)
-    
-    def run(self):
-        self.client.connect()
-        message = "Hola mundo"
-        self.client.send_msg(message)
-        self.client.recibir_msg()
-        self.client.close()
-
 if __name__ == "__main__":
     host = "192.168.100.172"
     port = 3333
-    app = ESP32Comunication(host, port)
-    app.run()
+    app = ESP32Client(host, port)
+    while(1):
+        app.connect()
+        message = "Hola mundo"
+        app.send_msg(message)
+        msgRecibido = app.recibir_msg()
+        print(msgRecibido)
+        app.close()
+    

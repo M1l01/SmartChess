@@ -42,29 +42,25 @@ class SmartChess:
 
         # Label Tablero
         self.lblTablero = tk.Label(self.wdInicio, text="", bg="#4C330C")
-        self.lblTablero.place(x=560, y=110, width=880, height=880)
+        self.lblTablero.place(x=460, y=110, width=880, height=880)
 
         #Cuadricula
         self.cuadricula = Canvas(self.wdInicio, width=800, height=800, highlightthickness=0)
-        self.cuadricula.place(x=600, y=150)
+        self.cuadricula.place(x=500, y=150)
         dimCasilla = 100
         for f in range(0,8):
             for c in range(0,8):
-                if ((c%2==0) and (f%2==0)) or ((c%2!=0) and (f%2!=0)):
-                    self.cuadricula.create_rectangle(c*dimCasilla, f*dimCasilla, c*dimCasilla+100,
-                                                     f*dimCasilla+100, fill="#ffffff", outline="#ffffff")
-                else:
-                    self.cuadricula.create_rectangle(c*dimCasilla, f*dimCasilla, c*dimCasilla+100,
-                                                     f*dimCasilla+100, fill="#000000", outline="#000000")
+                color = "#ffffff" if ((c%2==0) and (f%2==0)) or ((c%2!=0) and (f%2!=0)) else "#000000"
+                self.cuadricula.create_rectangle(c*dimCasilla, f*dimCasilla,c*dimCasilla+100, f*dimCasilla+100, fill=color, outline=color)
 
         #Labels para identificacion de coords
         #LETRAS
         self.lblLetters = tk.Label(self.wdInicio, text="A\t         B\t\t  C\t           D\t\t     E\t             F\t\t     G\t\tH",
                                    bg="#4C330C", fg="#ffffff", font=("Calisto MT", 12, "bold"))
-        self.lblLetters.place(x=640, y=960)
+        self.lblLetters.place(x=540, y=960)
         #NÚMEROS
         self.lblNumeros = Canvas(self.wdInicio, width=40, height=800, highlightthickness=0)
-        self.lblNumeros.place(x=560, y=150)
+        self.lblNumeros.place(x=460, y=150)
         contador = 8
         for fila in range(0,8):
             self.lblNumeros.create_rectangle(0, fila*100, 40, fila*100+100, fill="#4C330C", outline="#4C330C")
