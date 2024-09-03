@@ -1,23 +1,13 @@
-import tkinter as tk
-from tkinter import PhotoImage
+from PIL import Image, ImageOps
 
-# Crear la ventana principal
-root = tk.Tk()
-root.title("Imagen con Fondo Transparente")
+# Abrir la imagen
+imagen = Image.open('D://MILO//PORTAFOLIO_PROYECTOS//SmartChess//src//images//alfil_blanco.png')
+imagen = imagen.convert("RGB")
+# Invertir los colores
+imagen_invertida = ImageOps.invert(imagen)
 
-# Crear un lienzo para dibujar
-canvas = tk.Canvas(root, width=600, height=600)
-canvas.pack()
+# Guardar la imagen invertida
+imagen_invertida.save('D://MILO//PORTAFOLIO_PROYECTOS//SmartChess//src//images//alfil_blanco_inv.png')
 
-# Cargar la imagen PNG con fondo transparente
-image = PhotoImage(file="..//SmartChess//src//images//dama_negra.png")
-
-# Colocar la imagen en el lienzo
-canvas.create_image(0, 0, anchor=tk.NW, image=image)
-
-# Agregar otros widgets encima del lienzo si es necesario
-label = tk.Label(root, text="Texto sobre la imagen")
-label.pack()
-
-# Ejecutar la aplicación
-root.mainloop()
+# Mostrar la imagen invertida
+imagen_invertida.show()
