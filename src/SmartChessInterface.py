@@ -13,14 +13,16 @@ cafe oscuro: #251700
 cafe tablero: #4C330C
 tablero claras: #ecd9a6
 negro: #000000
+
+Casilla Azul: #030428
+Casilla Gris: #9e9fa2
 """
 
 class SmartChess:
     #Inicialización de la ventana principal
-    def __init__(self, wdInicio, dirFont):
-        self.wdInicio = wdInicio
-        self.dirFont = dirFont
+    def __init__(self, wdInicio):
         #Inicializacion de la Ventana de Inicio
+        self.wdInicio = wdInicio
         self.wdInicio.title("Smart Chess")
         self.wdInicio.geometry("1920x1080")
         self.wdInicio.config(bg="#5c5c5c")
@@ -38,7 +40,8 @@ class SmartChess:
 
         # Título nueva fuente       
         image = Image.new("RGB", (400,85), color="#030428")
-        customFont = ImageFont.truetype(self.dirFont, 48)
+        dirFont = "..//SmartChess//customFont//KOMIKAX_.ttf"
+        customFont = ImageFont.truetype(dirFont, 48)
         draw = ImageDraw.Draw(image)
         draw.text((30,1), "Smart Chess", font=customFont, fill="#ffffff")
         self.photo = ImageTk.PhotoImage(image)
@@ -55,7 +58,7 @@ class SmartChess:
         dimCasilla = 100
         for f in range(0,8):
             for c in range(0,8):
-                color = "#505050" if ((c%2==0) and (f%2==0)) or ((c%2!=0) and (f%2!=0)) else "#030428"
+                color = "#9e9fa2" if ((c%2==0) and (f%2==0)) or ((c%2!=0) and (f%2!=0)) else "#030428"
                 self.cuadricula.create_rectangle(c*dimCasilla, f*dimCasilla,c*dimCasilla+100,
                                                  f*dimCasilla+100, fill=color, outline=color)
 
@@ -99,30 +102,29 @@ class SmartChess:
 
     def ColocarPiezas(self):
         #Accion de Click sobre dama Blanca
-        def on_label_click(event):
+        def on_enter_mouse(event):
             event.widget.config(cursor="hand2")
 
         #Imagenes
         damaWhite = self.pngLabel("..//SmartChess//src//images//dama_blanca.png",
-                                   (236, 217, 166, 255), (90,90))
+                                   (158, 159, 162, 255), (90,90))
 
         self.lblDamaWhite = tk.Label(self.wdInicio, image=damaWhite, bg="#dad9b5", bd=0)
         self.lblDamaWhite.image = damaWhite
-        self.lblDamaWhite.place(x=20, y=110)
-        self.lblDamaWhite.bind("<Enter>", on_label_click)
+        self.lblDamaWhite.place(x=605, y=855)
+        self.lblDamaWhite.bind("<Enter>", on_enter_mouse)
     
     def pngLabel(self, dirImg, colorFondo, newsize):
         image = Image.open(dirImg)
-        image = image.resize(newsize)
-        fondo = Image.new("RGBA", image.size, colorFondo)
-        image = image.convert("RGBA")
-        image = Image.alpha_composite(fondo, image)
-        image = image.convert("RGB")
-        image = ImageTk.PhotoImage(image)
-        return image
+        imageResized = image.resize(newsize)
+        fondo = Image.new("RGBA", imageResized.size, colorFondo)
+        imageResized = imageResized.convert("RGBA")
+        imageComposed = Image.alpha_composite(fondo, imageResized)
+        imageRGB = imageComposed.convert("RGB")
+        imageRGB = ImageTk.PhotoImage(imageRGB)
+        return imageRGB
         
 if __name__ == "__main__":
     ventana = tk.Tk()
-    FontDirectory = "D://MILO//PORTAFOLIO_PROYECTOS//SmartChess//customFont//KOMIKAX_.ttf"
-    smartChess = SmartChess(ventana, FontDirectory)
+    smartChess = SmartChess(ventana)
     ventana.mainloop()
