@@ -28,8 +28,8 @@ class SmartChess:
         #Create Widgets
         self.LabelTitle()           #Label Title
         self.LabelTablero()         #Label Tablero
-        self.MenuSmartChess()       #Label Menu
-        self.ColocarImgs()          #Colocar Imgs
+        self.MenuJuegaAjedrez()     #Label Menu
+        self.ColocarPiezas()        #Colocar Imgs
 
     def LabelTitle(self):
         #Label background Título
@@ -75,39 +75,51 @@ class SmartChess:
                                         font=("Comic Sans MS", 14, "bold"))
             contador -= 1
 
-    def MenuSmartChess(self):
-        #Label Pestañas
+    def MenuJuegaAjedrez(self):
         self.lblpest = tk.Label(self.wdInicio, text="", bg="#232427")
         self.lblpest.place(x=1200, y=110, width=650, height=880)
 
+        logo = self.pngLabel("..//SmartChess//src//images//logo.png",
+                             (35,36,39,255), (250,250))
+        self.lblLogo = tk.Label(self.wdInicio, image=logo, bg="#232427", bd=0)
+        self.lblLogo.image = logo
+        self.lblLogo.place(x=1400, y=270)
+
         self.lblJuegaAjedrez = tk.Label(self.wdInicio, text="Juega al Ajedrez", bg="#232427",
                                         fg="#ffffff", font=("Comic Sans MS", 48, "bold"))
-        self.lblJuegaAjedrez.place(x=1260, y=200)
+        self.lblJuegaAjedrez.place(x=1260, y=180)
 
-        self.btnJuegoVirtual = tk.Button(self.wdInicio, text="Registrar", bg="#030428", fg="white",
-                                         cursor="hand2", font=("Comic Sans MS", 20, "bold"))
-        self.btnJuegoVirtual.place(x=1300, y=350, width=400, height=90)
+        self.btnJuegoVirtual = tk.Button(self.wdInicio, text="Juego Virtual", bg="#030428", fg="white",
+                                         cursor="hand2", font=("Comic Sans MS", 26, "bold"), bd=0)
+        self.btnJuegoVirtual.place(x=1325, y=550, width=400, height=90)
 
-    def ColocarImgs(self):
+        self.btnJuegoPresencial = tk.Button(self.wdInicio, text="Juego Presencial", bg="#030428", fg="white",
+                                            cursor="hand2", font=("Comic Sans MS", 26, "bold"), bd=0)
+        self.btnJuegoPresencial.place(x=1325, y=750, width=400, height=90)
+
+    def ColocarPiezas(self):
         #Accion de Click sobre dama Blanca
         def on_label_click(event):
             event.widget.config(cursor="hand2")
 
         #Imagenes
-        damaWhite = Image.open("..//SmartChess//src//images//dama_negra.png")
-        damaWhite = damaWhite.resize((90,90))
-        colorFondo = (236, 217, 166, 255)
-        fondo = Image.new("RGBA", damaWhite.size, colorFondo)
-        damaWhite = damaWhite.convert("RGBA")
-        damaWhite = Image.alpha_composite(fondo, damaWhite)
-        damaWhite = damaWhite.convert("RGB")
-        damaWhite = ImageTk.PhotoImage(damaWhite)
-        self.lblDamaWhite = tk.Label(self.wdInicio, image=damaWhite, bg="#dad9b5")
+        damaWhite = self.pngLabel("..//SmartChess//src//images//dama_blanca.png",
+                                   (236, 217, 166, 255), (90,90))
+
+        self.lblDamaWhite = tk.Label(self.wdInicio, image=damaWhite, bg="#dad9b5", bd=0)
         self.lblDamaWhite.image = damaWhite
         self.lblDamaWhite.place(x=20, y=110)
         self.lblDamaWhite.bind("<Enter>", on_label_click)
-
-
+    
+    def pngLabel(self, dirImg, colorFondo, newsize):
+        image = Image.open(dirImg)
+        image = image.resize(newsize)
+        fondo = Image.new("RGBA", image.size, colorFondo)
+        image = image.convert("RGBA")
+        image = Image.alpha_composite(fondo, image)
+        image = image.convert("RGB")
+        image = ImageTk.PhotoImage(image)
+        return image
         
 if __name__ == "__main__":
     ventana = tk.Tk()
