@@ -50,20 +50,20 @@ class SmartChess:
         self.lblTablero.place(x=260, y=110, width=880, height=880)
 
         #Cuadricula
-        self.cuadricula = Canvas(self.wdInicio, width=800, height=800, highlightthickness=0)
+        self.cuadricula = Canvas(self.wdInicio, width=800, height=800, highlightthickness=2)
         self.cuadricula.place(x=300, y=150)
         dimCasilla = 100
         for f in range(0,8):
             for c in range(0,8):
-                color = "#ecd9a6" if ((c%2==0) and (f%2==0)) or ((c%2!=0) and (f%2!=0)) else "#001817"
+                color = "#ecd9a6" if ((c%2==0) and (f%2==0)) or ((c%2!=0) and (f%2!=0)) else "#332000"
                 self.cuadricula.create_rectangle(c*dimCasilla, f*dimCasilla,c*dimCasilla+100,
                                                  f*dimCasilla+100, fill=color, outline=color)
 
         #Labels para identificacion de coords
         #LETRAS
         self.lblLetters = tk.Label(self.wdInicio,
-                                   text="A\t         B\t\t  C\t           D\t\t     E\t             F\t\t     G\t\tH",
-                                   bg="#332000", fg="#ffffff", font=("Calisto MT", 12, "bold"))
+                                   text="A\t    B\t        C\t            D\t\tE\t     F\t        G\t            H",
+                                   bg="#332000", fg="#ffffff", font=("Calisto MT", 14, "bold"))
         self.lblLetters.place(x=340, y=960)
         #NÚMEROS
         self.lblNumeros = Canvas(self.wdInicio, width=40, height=800, highlightthickness=0)
@@ -81,6 +81,11 @@ class SmartChess:
         lblpest.place(x=1200, y=110, width=650, height=880)
 
     def ColocarImgs(self):
+        #Accion de Click sobre dama Blanca
+        def on_label_click(event):
+            print("Se presionó sobre la dama Blanca", event.x, event.y)
+            print(type(event))
+
         #Imagenes
         damaWhite = Image.open("..//SmartChess//src//images//dama_blanca.png")
         damaWhite = damaWhite.resize((90,90))
@@ -89,9 +94,11 @@ class SmartChess:
         damaWhite = Image.alpha_composite(fondo_blanco, damaWhite)
         damaWhite = damaWhite.convert("RGB")
         damaWhite = ImageTk.PhotoImage(damaWhite)
-        lblimgdamaWhite = tk.Label(self.wdInicio, image=damaWhite, bg="#dad9b5")
-        lblimgdamaWhite.image = damaWhite
-        lblimgdamaWhite.place(x=20, y=110)
+        lblDamaWhite = tk.Label(self.wdInicio, image=damaWhite, bg="#dad9b5")
+        lblDamaWhite.image = damaWhite
+        lblDamaWhite.place(x=20, y=110)
+        lblDamaWhite.bind("<Button-1>", on_label_click)
+
 
         
 if __name__ == "__main__":
