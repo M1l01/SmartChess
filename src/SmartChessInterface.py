@@ -29,6 +29,8 @@ class SmartChess:
         self.screen.geometry("1920x1080")
         self.screen.config(bg="#5c5c5c")
 
+        self.cache = {}
+
         self.MatrixDetectionChess = MatrixDetectionChess
 
         #Create Widgets
@@ -125,7 +127,7 @@ class SmartChess:
         screen2.title("Ajuste Parámetros")
         screen2.geometry("400x600")
 
-        #self.ColocarPiezas()
+        lblinfoColocar = tk.Label(screen2, text="Coloque")
 
     def colocar_Piezas(self):
         #Accion de Click sobre dama Blanca
@@ -170,22 +172,32 @@ class SmartChess:
     def lbl_Pieza(self, dirImg, newsize, pos, funcEnterMouse):
         try:
             [bgcolor, bgcolorrgba] = ["#dad9b5", (158, 159, 162, 255)] if (((pos[0] + pos[1] - 60)/100)%2 == 0) else ["#0d4a6a", (13, 74, 106, 255)]
-            image = Image.open(dirImg)
-            imageResized = image.resize(newsize)
-            fondo = Image.new("RGBA", imageResized.size, bgcolorrgba)
-            imageResized = imageResized.convert("RGBA")
-            imageComposed = Image.alpha_composite(fondo, imageResized)
-            imageRGB = imageComposed.convert("RGB")
-            imageRGB = ImageTk.PhotoImage(imageRGB)
-            lblPieza = tk.Label(self.screen, image=imageRGB, bg=bgcolor, bd=0)
-            lblPieza.image = imageRGB
+            cache_key = (dirImg, newsize, bgcolorrgba) #Uso de cache para mejorar el rendimiento del programa
+            if cache_key not in self.cache:
+                try:
+                    image = Image.open(dirImg)
+                    imageResized = image.resize(newsize)
+                    fondo = Image.new("RGBA", imageResized.size, bgcolorrgba)
+                    imageResized = imageResized.convert("RGBA")
+                    imageComposed = Image.alpha_composite(fondo, imageResized)
+                    imageRGB = imageComposed.convert("RGB")
+                    imageTK = ImageTk.PhotoImage(imageRGB)
+                    self.cache[cache_key] = imageTK
+                except Exception as e:
+                    print(f"Error al cargar la imagen: {e}")
+                    return None
+                
+            lblPieza = tk.Label(self.screen, image=self.cache[cache_key], bg=bgcolor, bd=0)
+            lblPieza.image = self.cache[cache_key]
             lblPieza.place(x=pos[0], y=pos[1])
             lblPieza.bind("<Enter>", funcEnterMouse)
 
+            return lblPieza
+        
         except Exception as e:
             print(f"Error: {e}")
         
-        return lblPieza
+        return None
         
 if __name__ == "__main__":
     screen = tk.Tk()
