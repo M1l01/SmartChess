@@ -27,3 +27,27 @@ class ImgLabel:
         except Exception as e:
             print(f"Error al cargar la imagen: {e}")
         return None
+
+class Coords:
+    def optencion_coordenadas(self, coord):
+        try:
+            if len(coord) == 2:
+                letra = ord(coord[0])
+                numero = int(coord[1])
+                if (letra>=65 or letra <=72) and (numero>=1 or numero <=8):
+                    coordLetra = 240 + (99*(letra-65)) + letra
+                    coordNumero = 855 - (100*(numero-1))
+                    return (coordLetra, coordNumero)
+                else:
+                    raise SyntaxError("Coordenada fuera de rango")
+            else:
+                raise SyntaxError("Error en la longitud de la coordenada se espera una letra mayuscula y un número")
+        except SyntaxError:
+            raise
+    
+if __name__ == "__main__":
+    coordenada = Coords()
+    pos = coordenada.optencion_coordenadas("B7")
+    print(pos[0])
+    print(pos[1])
+    

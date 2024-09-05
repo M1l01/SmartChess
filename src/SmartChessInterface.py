@@ -4,7 +4,7 @@ from tkinter import Canvas, PhotoImage
 from tkinter.ttk import *
 from tkinter import ttk
 from PIL import Image, ImageDraw, ImageFont, ImageTk
-from common.utils import ImgLabel
+from common.utils import ImgLabel, Coords
 from animations import Animations
 
 """
@@ -41,6 +41,22 @@ class SmartChess:
             [1,1,1,1,1,1,1,1], #2
             [1,1,1,1,1,1,1,1]  #1
         ]
+
+        #   """Declarar los directorios de las piezas"""
+        #Piezas Blancas
+        self.damaBlanca = "..//SmartChess//src//images//dama_blanca.png"
+        self.reyBlanco = "..//SmartChess//src//images//rey_blanco.png"
+        self.alfilBlanco = "..//SmartChess//src//images//alfil_blanco.png"
+        self.caballoBlanco = "..//SmartChess//src//images//caballo_blanco.png"
+        self.torreBlanca = "..//SmartChess//src//images//torre_blanca.png"
+        self.peonBlanco = "..//SmartChess//src//images//peon_blanco.png"
+        #Piezas Negras
+        self.damaNegra = "..//SmartChess//src//images//dama_negra.png"
+        self.reyNegro = "..//SmartChess//src//images//rey_negro.png"
+        self.alfilNegro = "..//SmartChess//src//images//alfil_negro.png"
+        self.caballoNegro = "..//SmartChess//src//images//caballo_negro.png"
+        self.torreNegra = "..//SmartChess//src//images//torre_negra.png"
+        self.peonNegro = "..//SmartChess//src//images//peon_negro.png"
 
         #   """Create Widgets"""
         self.crear_widgets()
@@ -116,7 +132,6 @@ class SmartChess:
         lblJuegaAjedrez.place(x=1260, y=180)
         
         #Botones
-
         btnJuegoPresencial = tk.Button(self.screen, text="Juego Presencial",command=self.Juego_Presencial, activebackground="#030428", activeforeground="#767676",
                                        bg="#030428", fg="white", cursor="hand2", font=("Comic Sans MS", 26, "bold"), bd=0)
         btnJuegoPresencial.place(x=1325, y=750, width=400, height=90)
@@ -172,14 +187,16 @@ class SmartChess:
         lblInfoImg.image = InfoImg
         lblInfoImg.place(x=50, y=125)
 
-    def lbl_Pieza(self, dirImg, newsize, pos, funcEnterMouse):
+    def lbl_Pieza(self, dirImg, coord):
         try:
+            coordenadas = Coords()
+            pos = coordenadas.optencion_coordenadas(coord)
             [bgcolor, bgcolorrgba] = ["#dad9b5", (158, 159, 162, 255)] if (((pos[0] + pos[1] - 60)/100)%2 == 0) else ["#0d4a6a", (13, 74, 106, 255)]
-            cache_key = (dirImg, newsize, bgcolorrgba) #Uso de cache para mejorar el rendimiento del programa
+            cache_key = (dirImg, (90,90), bgcolorrgba) #Uso de cache para mejorar el rendimiento del programa
             if cache_key not in self.cache:
                 try:
                     image = Image.open(dirImg)
-                    imageResized = image.resize(newsize)
+                    imageResized = image.resize((90,90))
                     fondo = Image.new("RGBA", imageResized.size, bgcolorrgba)
                     imageResized = imageResized.convert("RGBA")
                     imageComposed = Image.alpha_composite(fondo, imageResized)
@@ -190,11 +207,11 @@ class SmartChess:
                 except Exception as e:
                     print(f"Error al cargar la imagen: {e}")
                     return None
-                
+            
             lblPieza = tk.Label(self.screen, image=self.cache[cache_key], bg=bgcolor, bd=0)
             lblPieza.image = self.cache[cache_key]
             lblPieza.place(x=pos[0], y=pos[1])
-            lblPieza.bind("<Enter>", funcEnterMouse)
+            lblPieza.bind("<Enter>", self.on_enter_mouse)
 
             return lblPieza
         
@@ -203,33 +220,32 @@ class SmartChess:
         
         return None
     
-    def colocar_Piezas_Inicio(self):
-        #Accion de Click sobre dama Blanca
-        def on_enter_mouse(event):
+    def on_enter_mouse(self, event):
             event.widget.config(cursor="hand2")
-
-        self.lbl_Pieza("..//SmartChess//src//images//torre_blanca.png", (90,90), (305, 855), on_enter_mouse)            # TorreWhiteA
-        self.lbl_Pieza("..//SmartChess//src//images//caballo_blanco.png", (90,90), (405, 855), on_enter_mouse)          # CaballoWhiteB
-        self.lbl_Pieza("..//SmartChess//src//images//alfil_blanco.png", (90,90), (505, 855), on_enter_mouse)            # AlfilWhiteB 
-        self.lbl_Pieza("..//SmartChess//src//images//dama_blanca.png", (90,90), (605, 855), on_enter_mouse)             # DamaWhite
-        self.lbl_Pieza("..//SmartChess//src//images//rey_blanco.png", (90,90), (705, 855), on_enter_mouse)              # ReyWhite
-        self.lbl_Pieza("..//SmartChess//src//images//alfil_blanco.png", (90,90), (805, 855), on_enter_mouse)            # AlfilWhiteW
-        self.lbl_Pieza("..//SmartChess//src//images//caballo_blanco.png", (90,90), (905, 855), on_enter_mouse)          # CaballoWhiteG
-        self.lbl_Pieza("..//SmartChess//src//images//torre_blanca.png", (90,90), (1005, 855), on_enter_mouse)           # TorreWhiteH
+    
+    def colocar_Piezas_Inicio(self):  
+        self.lbl_Pieza(self.torreBlanca, "A1")            # TorreWhiteA
+        self.lbl_Pieza(self.caballoBlanco, "B1")          # CaballoWhiteB
+        self.lbl_Pieza(self.alfilBlanco, "C1")            # AlfilWhiteB 
+        self.lbl_Pieza(self.damaBlanca, "D1")             # DamaWhite
+        self.lbl_Pieza(self.reyBlanco, "E1")              # ReyWhite
+        self.lbl_Pieza(self.alfilBlanco, "F1")            # AlfilWhiteW
+        self.lbl_Pieza(self.caballoBlanco, "G1")          # CaballoWhiteG
+        self.lbl_Pieza(self.torreBlanca, "H1")           # TorreWhiteH
         
-        self.lbl_Pieza("..//SmartChess//src//images//torre_negra.png", (90,90), (305, 155), on_enter_mouse)             # TorreBlackA
-        self.lbl_Pieza("..//SmartChess//src//images//caballo_negro.png", (90,90), (405, 155), on_enter_mouse)           # CaballoBlackB
-        self.lbl_Pieza("..//SmartChess//src//images//alfil_negro.png", (90,90), (505, 155), on_enter_mouse)             # AlfilBlackB
-        self.lbl_Pieza("..//SmartChess//src//images//dama_negra.png", (90,90), (605, 155), on_enter_mouse)              # DamaBlack
-        self.lbl_Pieza("..//SmartChess//src//images//rey_negro.png", (90,90), (705, 155), on_enter_mouse)               # ReyBlack
-        self.lbl_Pieza("..//SmartChess//src//images//alfil_negro.png", (90,90), (805, 155), on_enter_mouse)             # AlfilBlackW
-        self.lbl_Pieza("..//SmartChess//src//images//caballo_negro.png", (90,90), (905, 155), on_enter_mouse)           # CaballoBlackG
-        self.lbl_Pieza("..//SmartChess//src//images//torre_negra.png", (90,90), (1005, 155), on_enter_mouse)            # TorreBlackH
+        self.lbl_Pieza(self.torreNegra, "A8")             # TorreBlackA
+        self.lbl_Pieza(self.caballoNegro, "B8")           # CaballoBlackB
+        self.lbl_Pieza(self.alfilNegro, "C8")             # AlfilBlackB
+        self.lbl_Pieza(self.damaNegra, "D8")              # DamaBlack
+        self.lbl_Pieza(self.reyNegro, "E8")               # ReyBlack
+        self.lbl_Pieza(self.alfilNegro, "F8")             # AlfilBlackW
+        self.lbl_Pieza(self.caballoNegro, "G8")           # CaballoBlackG
+        self.lbl_Pieza(self.torreNegra, "H8")            # TorreBlackH
         
-        for piece in range(0,8):
-            self.lbl_Pieza("..//SmartChess//src//images//peon_blanco.png", (90,90), ((piece*100)+305, 755), on_enter_mouse)       
-            self.lbl_Pieza("..//SmartChess//src//images//peon_negro.png", (90,90), ((piece*100)+305, 255), on_enter_mouse)
-
+        letras = ["A", "B", "C", "D", "E", "F", "G", "H"]
+        for letra in letras:
+            self.lbl_Pieza(self.peonBlanco, f"{letra}2")
+            self.lbl_Pieza(self.peonNegro, f"{letra}7")
         
 if __name__ == "__main__":
     screen = tk.Tk()
