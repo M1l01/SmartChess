@@ -23,6 +23,7 @@ class SmartChess:
         #Inicializacion de la Ventana de Inicio
         self.screen = screen
         self.screen.title("Smart Chess")
+        #self.screen.overrideredirect(True)
         self.screen.geometry("1920x1080")
         self.screen.config(bg="#5c5c5c")
 
@@ -41,14 +42,13 @@ class SmartChess:
             [1,1,1,1,1,1,1,1]  #1
         ]
 
-        #Create Widgets
+        #   """Create Widgets"""
         self.crear_widgets()
 
     def crear_widgets(self):
         self.Title()                    # Title
         self.Tablero()                  # Tablero
         self.menu_juega_ajedrez()       # Menú de Opciones de Juego
-        self.colocar_Piezas_Inicio()    #Colocamos las piezas en posición Inicial
 
     def Title(self):
         #Label background Título
@@ -117,11 +117,11 @@ class SmartChess:
         
         #Botones
 
-        btnJuegoPresencial = tk.Button(self.screen, text="Juego Presencial",command=self.Juego_Presencial,
+        btnJuegoPresencial = tk.Button(self.screen, text="Juego Presencial",command=self.Juego_Presencial, activebackground="#030428", activeforeground="#767676",
                                        bg="#030428", fg="white", cursor="hand2", font=("Comic Sans MS", 26, "bold"), bd=0)
         btnJuegoPresencial.place(x=1325, y=750, width=400, height=90)
 
-        btnJuegoVirtual = tk.Button(self.screen, text="Juego Virtual", bg="#030428", fg="white",
+        btnJuegoVirtual = tk.Button(self.screen, text="Juego Virtual", bg="#030428", fg="white", activebackground="#030428", activeforeground="#767676",
                                          cursor="hand2", font=("Comic Sans MS", 26, "bold"), bd=0)
         btnJuegoVirtual.place(x=1325, y=550, width=400, height=90)
 
@@ -130,10 +130,11 @@ class SmartChess:
         #Crear ventana de Info
         screen2 = Toplevel(self.screen)
         screen2.title("Ajuste Parámetros")
-        screen2.geometry("400x480")
+        screen2.geometry("400x480+500+300")
         screen2.config(bg="#232427")
 
         if(self.MatrixDetectionChess == self.MatrizComprobacionInicio):
+            self.colocar_Piezas_Inicio()    #Colocamos las piezas en posición Inicial
             screen2.destroy()   #Cerramos ventana de Info
 
             #Ventana de Inicio de Juego
@@ -143,19 +144,24 @@ class SmartChess:
             self.Intruccion_colocar_Piezas(screen2)
 
     def Inicio_Juego(self):
+        self.animacion_inicio_juego()
+
+    def animacion_inicio_juego(self):
+        #       """Configuración de Screen 3"""
         screen3 = Toplevel(self.screen)
         screen3.overrideredirect(True)
-        screen3.geometry("450x250+483+456")
+        screen3.geometry("450x250")
         screen3.config(bg="#232427")
 
         #Label Inicio de Partida
-        lblInicioPartida = tk.Label(screen3, text="Inicio\nde\nPartida", bg="#36383d", fg="#ffffff",
+        lblInicioPartida = tk.Label(screen3, text="Inicio\nde\nPartida", bg="#030428", fg="#ffffff",
                                     font=("Comic Sans MS", 40, "bold"))
         lblInicioPartida.place(x=10, y=10, width=430, height=230)
+        
+        #Animaciones
+        animacionScreen3 = Animations(screen3)
+        animacionScreen3.desvanecimiento_horizontal(posInicialX=383,posY=456,geometryX=450,geometryY=250,posFinalX=783,step=0.02)
 
-        #desvanecimiento
-        Animations(screen3).desvanecimiento()
-    
     def Intruccion_colocar_Piezas(self, screen):
         lblInfoTxt = tk.Label(screen, text="Coloque las piezas\npara iniciar la partida", bg="#232427",
                                 fg="#ffffff", font=("Comic Sans MS", 20, "bold"))
@@ -202,23 +208,23 @@ class SmartChess:
         def on_enter_mouse(event):
             event.widget.config(cursor="hand2")
 
-        self.lbl_Pieza("..//SmartChess//src//images//torre_blanca.png", (90,90), (305, 855), on_enter_mouse)                    # TorreWhiteA
-        self.lbl_Pieza("..//SmartChess//src//images//caballo_blanco.png", (90,90), (405, 855), on_enter_mouse)                  # CaballoWhiteB
-        self.lbl_Pieza("..//SmartChess//src//images//alfil_blanco.png", (90,90), (505, 855), on_enter_mouse)                    # AlfilWhiteB 
-        self.lbl_Pieza("..//SmartChess//src//images//dama_blanca.png", (90,90), (605, 855), on_enter_mouse)                     # DamaWhite
-        self.lbl_Pieza("..//SmartChess//src//images//rey_blanco.png", (90,90), (705, 855), on_enter_mouse)                      # ReyWhite
-        self.lbl_Pieza("..//SmartChess//src//images//alfil_blanco.png", (90,90), (805, 855), on_enter_mouse)                    # AlfilWhiteW
-        self.lbl_Pieza("..//SmartChess//src//images//caballo_blanco.png", (90,90), (905, 855), on_enter_mouse)                  # CaballoWhiteG
-        self.lbl_Pieza("..//SmartChess//src//images//torre_blanca.png", (90,90), (1005, 855), on_enter_mouse)                   # TorreWhiteH
+        self.lbl_Pieza("..//SmartChess//src//images//torre_blanca.png", (90,90), (305, 855), on_enter_mouse)            # TorreWhiteA
+        self.lbl_Pieza("..//SmartChess//src//images//caballo_blanco.png", (90,90), (405, 855), on_enter_mouse)          # CaballoWhiteB
+        self.lbl_Pieza("..//SmartChess//src//images//alfil_blanco.png", (90,90), (505, 855), on_enter_mouse)            # AlfilWhiteB 
+        self.lbl_Pieza("..//SmartChess//src//images//dama_blanca.png", (90,90), (605, 855), on_enter_mouse)             # DamaWhite
+        self.lbl_Pieza("..//SmartChess//src//images//rey_blanco.png", (90,90), (705, 855), on_enter_mouse)              # ReyWhite
+        self.lbl_Pieza("..//SmartChess//src//images//alfil_blanco.png", (90,90), (805, 855), on_enter_mouse)            # AlfilWhiteW
+        self.lbl_Pieza("..//SmartChess//src//images//caballo_blanco.png", (90,90), (905, 855), on_enter_mouse)          # CaballoWhiteG
+        self.lbl_Pieza("..//SmartChess//src//images//torre_blanca.png", (90,90), (1005, 855), on_enter_mouse)           # TorreWhiteH
         
-        self.lbl_Pieza("..//SmartChess//src//images//torre_negra.png", (90,90), (305, 155), on_enter_mouse)                     # TorreBlackA
-        self.lbl_Pieza("..//SmartChess//src//images//caballo_negro.png", (90,90), (405, 155), on_enter_mouse)                   # CaballoBlackB
-        self.lbl_Pieza("..//SmartChess//src//images//alfil_negro.png", (90,90), (505, 155), on_enter_mouse)                     # AlfilBlackB
-        self.lbl_Pieza("..//SmartChess//src//images//dama_negra.png", (90,90), (605, 155), on_enter_mouse)                      # DamaBlack
-        self.lbl_Pieza("..//SmartChess//src//images//rey_negro.png", (90,90), (705, 155), on_enter_mouse)                       # ReyBlack
-        self.lbl_Pieza("..//SmartChess//src//images//alfil_negro.png", (90,90), (805, 155), on_enter_mouse)                     # AlfilBlackW
-        self.lbl_Pieza("..//SmartChess//src//images//caballo_negro.png", (90,90), (905, 155), on_enter_mouse)                   # CaballoBlackG
-        self.lbl_Pieza("..//SmartChess//src//images//torre_negra.png", (90,90), (1005, 155), on_enter_mouse)                    # TorreBlackH
+        self.lbl_Pieza("..//SmartChess//src//images//torre_negra.png", (90,90), (305, 155), on_enter_mouse)             # TorreBlackA
+        self.lbl_Pieza("..//SmartChess//src//images//caballo_negro.png", (90,90), (405, 155), on_enter_mouse)           # CaballoBlackB
+        self.lbl_Pieza("..//SmartChess//src//images//alfil_negro.png", (90,90), (505, 155), on_enter_mouse)             # AlfilBlackB
+        self.lbl_Pieza("..//SmartChess//src//images//dama_negra.png", (90,90), (605, 155), on_enter_mouse)              # DamaBlack
+        self.lbl_Pieza("..//SmartChess//src//images//rey_negro.png", (90,90), (705, 155), on_enter_mouse)               # ReyBlack
+        self.lbl_Pieza("..//SmartChess//src//images//alfil_negro.png", (90,90), (805, 155), on_enter_mouse)             # AlfilBlackW
+        self.lbl_Pieza("..//SmartChess//src//images//caballo_negro.png", (90,90), (905, 155), on_enter_mouse)           # CaballoBlackG
+        self.lbl_Pieza("..//SmartChess//src//images//torre_negra.png", (90,90), (1005, 155), on_enter_mouse)            # TorreBlackH
         
         for piece in range(0,8):
             self.lbl_Pieza("..//SmartChess//src//images//peon_blanco.png", (90,90), ((piece*100)+305, 755), on_enter_mouse)       
@@ -230,7 +236,7 @@ if __name__ == "__main__":
     #Matriz de Deteccion en inicio de Partida
     MatrizDetection = [
         #A B C D E F G H
-        [0,1,1,1,1,1,1,1], #8
+        [1,1,1,1,1,1,1,1], #8
         [1,1,1,1,1,1,1,1], #7
         [0,0,0,0,0,0,0,0], #6
         [0,0,0,0,0,0,0,0], #5
