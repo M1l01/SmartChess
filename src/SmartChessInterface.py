@@ -43,14 +43,14 @@ class SmartChess:
         ]
 
         #   """Declarar los directorios de las piezas"""
-        #Piezas Blancas
+        # Diccionarios de las Piezas Blancas
         self.damaBlanca = "..//SmartChess//src//images//dama_blanca.png"
         self.reyBlanco = "..//SmartChess//src//images//rey_blanco.png"
         self.alfilBlanco = "..//SmartChess//src//images//alfil_blanco.png"
         self.caballoBlanco = "..//SmartChess//src//images//caballo_blanco.png"
         self.torreBlanca = "..//SmartChess//src//images//torre_blanca.png"
         self.peonBlanco = "..//SmartChess//src//images//peon_blanco.png"
-        #Piezas Negras
+        # Diccionarios de las Piezas Negras
         self.damaNegra = "..//SmartChess//src//images//dama_negra.png"
         self.reyNegro = "..//SmartChess//src//images//rey_negro.png"
         self.alfilNegro = "..//SmartChess//src//images//alfil_negro.png"
@@ -160,6 +160,7 @@ class SmartChess:
 
     def Inicio_Juego(self):
         self.animacion_inicio_juego()
+
 
     def animacion_inicio_juego(self):
         #       """Configuración de Screen 3"""

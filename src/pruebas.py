@@ -1,28 +1,33 @@
 import tkinter as tk
-import time
+import json
+
+# Función para cargar datos desde el archivo JSON
+def cargar_datos():
+    try:
+        with open('..//SmartChess//src//piezas.json', 'r') as archivo:
+            datos = json.load(archivo)
+        return datos
+    except FileNotFoundError:
+        return {"usuarios": []}  # Devuelve un diccionario vacío si el archivo no existe
+
+# Función para mostrar los datos en la lista de Tkinter
+def mostrar_datos():
+    lista_usuarios.delete(0, tk.END)  # Limpia la lista antes de cargar nuevos datos
+    datos = cargar_datos()
+    for usuario in datos["usuarios"]:
+        lista_usuarios.insert(tk.END, f"Nombre: {usuario['nombre']}, Edad: {usuario['edad']}")
 
 # Crear la ventana principal
-root = tk.Tk()
-root.geometry("200x100")  # Establecer el tamaño de la ventana
+ventana = tk.Tk()
+ventana.title("Lista de Usuarios")
 
-# Función para mover la ventana de izquierda a derecha
-def move_window():
-    # Obtener la posición actual de la ventana
-    x = 0  # Iniciar en el borde izquierdo de la pantalla
-    y = 100  # Fijar la posición vertical de la ventana
-    
-    # Obtener el ancho de la pantalla
-    screen_width = root.winfo_screenwidth()
-    
-    # Mover la ventana de izquierda a derecha
-    while x < screen_width - 200:  # 200 es el ancho de la ventana
-        root.geometry(f"200x100+{x}+{y}")  # Actualizar la posición de la ventana
-        root.update()  # Actualizar la interfaz gráfica
-        time.sleep(0.01)  # Esperar un poco para hacer visible el movimiento
-        x += 5  # Incrementar la posición horizontal de la ventana
+# Crear un botón para cargar y mostrar los datos
+btn_cargar = tk.Button(ventana, text="Cargar Usuarios", command=mostrar_datos)
+btn_cargar.pack(pady=10)
 
-# Llamar a la función de movimiento después de que la ventana se haya mostrado
-move_window()
+# Crear una lista para mostrar los usuarios
+lista_usuarios = tk.Listbox(ventana, width=40, height=10)
+lista_usuarios.pack(pady=10)
 
-# Ejecutar el bucle principal de Tkinter
-root.mainloop()
+# Ejecutar la aplicación
+ventana.mainloop()
