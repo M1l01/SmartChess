@@ -128,7 +128,7 @@ class SmartChess:
                                         fg="#ffffff", font=("Comic Sans MS", 48, "bold"))
         lblJuegaAjedrez.place(x=1260, y=180)
         
-        #Botones
+        # Botones
         btnJuegoPresencial = tk.Button(self.screen, text="Juego en Tablero",command=self.Juego_Presencial, activebackground="#030428", activeforeground="#767676",
                                        bg="#030428", fg="white", cursor="hand2", font=("Comic Sans MS", 26, "bold"), bd=0)
         btnJuegoPresencial.place(x=1325, y=750, width=400, height=90)
@@ -248,7 +248,18 @@ class SmartChess:
         match tipo:
             case "peon":
                 print("Es un peon")
-        print(f"Haz hecho click en {coordenada} es {tipo}")
+            case "torre":
+                print("Es una torre")
+            case "caballo":
+                print("Es un caballo")
+            case "alfil":
+                print("Es un alfil")
+            case "dama":
+                print("Es una dama")
+            case "rey":
+                print("Es un rey")
+            case _:
+                print("No es una pieza")
 
     def deteccion_entrada_piezas(self, piezas, idx):
         tipo = piezas[idx][1]["tipo"]

@@ -22,8 +22,3 @@ Pawn Rules:
   en esa dirección.
 """
 
-team = "white"
-posFila = 2
-posCol = "E"
-
-

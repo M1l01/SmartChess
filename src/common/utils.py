@@ -1,9 +1,10 @@
 from PIL import Image, ImageTk
 
 class ImgLabel:
-    def __init__(self, dirImg, newsize):
+    def __init__(self, dirImg, newsize) -> None:
         self.dirImg = dirImg
         self.newsize = newsize
+    
     def pngLabel(self, bgColorRgba):
         try:
             image = Image.open(self.dirImg)
