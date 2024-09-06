@@ -114,7 +114,7 @@ class SmartChess:
             contador -= 1
 
     def menu_juega_ajedrez(self):
-        global btnJuegoPresencial
+        global btnJuegoPresencial, btnJuegoVirtual
 
         lblPest = tk.Label(self.screen, text="", bg="#232427")
         lblPest.place(x=1200, y=110, width=650, height=880)
@@ -129,53 +129,13 @@ class SmartChess:
         lblJuegaAjedrez.place(x=1260, y=180)
         
         #Botones
-        btnJuegoPresencial = tk.Button(self.screen, text="Juego Presencial",command=self.Juego_Presencial, activebackground="#030428", activeforeground="#767676",
+        btnJuegoPresencial = tk.Button(self.screen, text="Juego en Tablero",command=self.Juego_Presencial, activebackground="#030428", activeforeground="#767676",
                                        bg="#030428", fg="white", cursor="hand2", font=("Comic Sans MS", 26, "bold"), bd=0)
         btnJuegoPresencial.place(x=1325, y=750, width=400, height=90)
 
-        btnJuegoVirtual = tk.Button(self.screen, text="Juego Virtual", bg="#030428", fg="white", activebackground="#030428", activeforeground="#767676",
+        btnJuegoVirtual = tk.Button(self.screen, text="Juego Virtual", command= self.Inicio_Juego_Virtual,bg="#030428", fg="white", activebackground="#030428", activeforeground="#767676",
                                          cursor="hand2", font=("Comic Sans MS", 26, "bold"), bd=0)
         btnJuegoVirtual.place(x=1325, y=550, width=400, height=90)
-
-    #                               """Juego Presencial"""  
-    def Juego_Presencial(self):
-        global btnJuegoPresencial
-        btnJuegoPresencial.config(state="disable")
-        #Crear ventana de Info
-        screen2 = Toplevel(self.screen)
-        screen2.title("Ajuste Parámetros")
-        screen2.geometry("400x480+500+300")
-        screen2.config(bg="#232427")
-
-        if(self.MatrixDetectionChess == self.MatrizComprobacionInicio):
-            self.colocar_Piezas_Inicio()    #Colocamos las piezas en posición Inicial
-            screen2.destroy()   #Cerramos ventana de Info
-
-            #Ventana de Inicio de Juego
-            self.Inicio_Juego()
-            btnJuegoPresencial.config(state="normal")
-        else:
-            self.Intruccion_colocar_Piezas(screen2)
-
-    def Inicio_Juego(self):
-        self.animacion_inicio_juego()
-
-
-    def animacion_inicio_juego(self):
-        #       """Configuración de Screen 3"""
-        screen3 = Toplevel(self.screen)
-        screen3.overrideredirect(True)
-        screen3.geometry("450x250")
-        screen3.config(bg="#232427")
-
-        #Label Inicio de Partida
-        lblInicioPartida = tk.Label(screen3, text="Inicio\nde\nPartida", bg="#030428", fg="#ffffff",
-                                    font=("Comic Sans MS", 40, "bold"))
-        lblInicioPartida.place(x=10, y=10, width=430, height=230)
-        
-        #Animaciones
-        animacionScreen3 = Animations(screen3)
-        animacionScreen3.desvanecimiento_horizontal(posInicialX=383,posY=456,geometryX=450,geometryY=250,posFinalX=783,step=0.02)
 
     def Intruccion_colocar_Piezas(self, screen):
         lblInfoTxt = tk.Label(screen, text="Coloque las piezas\npara iniciar la partida", bg="#232427",
@@ -211,7 +171,6 @@ class SmartChess:
             lblPieza = tk.Label(self.screen, image=self.cache[cache_key], bg=bgcolor, bd=0)
             lblPieza.image = self.cache[cache_key]
             lblPieza.place(x=pos[0], y=pos[1])
-            lblPieza.bind("<Enter>", self.on_enter_mouse)
 
             return lblPieza
         
@@ -220,12 +179,84 @@ class SmartChess:
         
         return None
     
-    def on_enter_mouse(self, event):
-            event.widget.config(cursor="hand2")
-    
-    def colocar_Piezas_Inicio(self): 
+    def colocar_Piezas_Inicio(self):
+        listaPiezas = []
         for _, pieza in self.piezas.items():
-            self.lbl_Pieza(pieza["directorio"], pieza["coordenada"])
+            lblpieza = self.lbl_Pieza(pieza["directorio"], pieza["coordenada"])
+            listaPiezas.append((lblpieza, pieza))
+            print((lblpieza, pieza))
+        return listaPiezas
+    
+    def animacion_inicio_juego(self):
+        #       """Configuración de Screen 3"""
+        screen3 = Toplevel(self.screen)
+        screen3.overrideredirect(True)
+        screen3.geometry("450x250")
+        screen3.config(bg="#232427")
+
+        #Label Inicio de Partida
+        lblInicioPartida = tk.Label(screen3, text="Inicio\nde\nPartida", bg="#030428", fg="#ffffff",
+                                    font=("Comic Sans MS", 40, "bold"))
+        lblInicioPartida.place(x=10, y=10, width=430, height=230)
+        
+        #Animaciones
+        animacionScreen3 = Animations(screen3)
+        animacionScreen3.desvanecimiento_horizontal(posInicialX=383,posY=456,geometryX=450,geometryY=250,posFinalX=783,step=0.02)
+    
+    #                               """Juego Presencial"""  
+    def Juego_Presencial(self):
+        global btnJuegoPresencial
+
+        btnJuegoPresencial.config(state="disable")
+
+        #Crear ventana de Info
+        screen2 = Toplevel(self.screen)
+        screen2.title("Ajuste Parámetros")
+        screen2.geometry("400x480+500+300")
+        screen2.config(bg="#232427")
+
+        if(self.MatrixDetectionChess == self.MatrizComprobacionInicio):
+            self.colocar_Piezas_Inicio()    #Colocamos las piezas en posición Inicial
+            screen2.destroy()   #Cerramos ventana de Info
+
+            #Ventana de Inicio de Juego
+            self.Inicio_Juego_Presencial()
+            btnJuegoPresencial.config(state="normal")
+        else:
+            self.Intruccion_colocar_Piezas(screen2)
+
+    def Inicio_Juego_Presencial(self):
+        self.animacion_inicio_juego()
+
+    #                               """Juego Virtual"""
+    def Inicio_Juego_Virtual(self):
+        global btnJuegoVirtual
+
+        btnJuegoVirtual.config(state="disabled")
+        piezas = self.colocar_Piezas_Inicio()
+
+        iteradorPiezas = 0
+        self.deteccion_entrada_piezas(piezas, iteradorPiezas)
+
+        self.animacion_inicio_juego()
+        btnJuegoVirtual.config(state="normal")
+    
+    def Entrada_Pieza(self, event, tipo, coordenada):
+        event.widget.config(cursor="hand2")
+
+    def btn_pieza(self, event, tipo, coordenada):
+        print(f"Haz hecho click en {coordenada} es {tipo}")
+
+    def deteccion_entrada_piezas(self, piezas, idx):
+        tipo = piezas[idx][1]["tipo"]
+        coordenada = piezas[idx][1]["coordenada"]
+        piezas[idx][0].bind("<Enter>", lambda event: self.Entrada_Pieza(event, tipo, coordenada))
+        piezas[idx][0].bind("<Button-1>", lambda event: self.btn_pieza(event, tipo, coordenada))
+        idx +=1
+        if (idx >= len(piezas)):
+            idx = 0
+
+        self.screen.after(50, self.deteccion_entrada_piezas, piezas, idx)
         
 if __name__ == "__main__":
     screen = tk.Tk()
