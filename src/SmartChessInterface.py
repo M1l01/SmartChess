@@ -245,13 +245,18 @@ class SmartChess:
         event.widget.config(cursor="hand2")
 
     def btn_pieza(self, event, tipo, coordenada):
+        match tipo:
+            case "peon":
+                print("Es un peon")
         print(f"Haz hecho click en {coordenada} es {tipo}")
 
     def deteccion_entrada_piezas(self, piezas, idx):
         tipo = piezas[idx][1]["tipo"]
         coordenada = piezas[idx][1]["coordenada"]
+
         piezas[idx][0].bind("<Enter>", lambda event: self.Entrada_Pieza(event, tipo, coordenada))
         piezas[idx][0].bind("<Button-1>", lambda event: self.btn_pieza(event, tipo, coordenada))
+
         idx +=1
         if (idx >= len(piezas)):
             idx = 0
