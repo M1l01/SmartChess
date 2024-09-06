@@ -6,6 +6,7 @@ from tkinter import ttk
 from PIL import Image, ImageDraw, ImageFont, ImageTk
 from common.utils import ImgLabel, Coords
 from animations import Animations
+import json
 
 """
 Paleta de Colores de la aplicación
@@ -42,24 +43,19 @@ class SmartChess:
             [1,1,1,1,1,1,1,1]  #1
         ]
 
-        #   """Declarar los directorios de las piezas"""
-        # Diccionarios de las Piezas Blancas
-        self.damaBlanca = "..//SmartChess//src//images//dama_blanca.png"
-        self.reyBlanco = "..//SmartChess//src//images//rey_blanco.png"
-        self.alfilBlanco = "..//SmartChess//src//images//alfil_blanco.png"
-        self.caballoBlanco = "..//SmartChess//src//images//caballo_blanco.png"
-        self.torreBlanca = "..//SmartChess//src//images//torre_blanca.png"
-        self.peonBlanco = "..//SmartChess//src//images//peon_blanco.png"
-        # Diccionarios de las Piezas Negras
-        self.damaNegra = "..//SmartChess//src//images//dama_negra.png"
-        self.reyNegro = "..//SmartChess//src//images//rey_negro.png"
-        self.alfilNegro = "..//SmartChess//src//images//alfil_negro.png"
-        self.caballoNegro = "..//SmartChess//src//images//caballo_negro.png"
-        self.torreNegra = "..//SmartChess//src//images//torre_negra.png"
-        self.peonNegro = "..//SmartChess//src//images//peon_negro.png"
+        #       """Importar Datos de las Piezas"""
+        self.piezas = self.cargar_datos_piezas()
 
         #   """Create Widgets"""
         self.crear_widgets()
+
+    def cargar_datos_piezas(self):
+        try:
+            with open('..//SmartChess//src//piezas.json', 'r') as archivo:
+                piezas = json.load(archivo)
+            return piezas
+        except FileNotFoundError:
+            return {"Pieza": []}
 
     def crear_widgets(self):
         self.Title()                    # Title
@@ -118,6 +114,7 @@ class SmartChess:
             contador -= 1
 
     def menu_juega_ajedrez(self):
+        global btnJuegoPresencial
 
         lblPest = tk.Label(self.screen, text="", bg="#232427")
         lblPest.place(x=1200, y=110, width=650, height=880)
@@ -142,6 +139,8 @@ class SmartChess:
 
     #                               """Juego Presencial"""  
     def Juego_Presencial(self):
+        global btnJuegoPresencial
+        btnJuegoPresencial.config(state="disable")
         #Crear ventana de Info
         screen2 = Toplevel(self.screen)
         screen2.title("Ajuste Parámetros")
@@ -154,7 +153,7 @@ class SmartChess:
 
             #Ventana de Inicio de Juego
             self.Inicio_Juego()
-
+            btnJuegoPresencial.config(state="normal")
         else:
             self.Intruccion_colocar_Piezas(screen2)
 
@@ -224,29 +223,9 @@ class SmartChess:
     def on_enter_mouse(self, event):
             event.widget.config(cursor="hand2")
     
-    def colocar_Piezas_Inicio(self):  
-        self.lbl_Pieza(self.torreBlanca, "A1")            # TorreWhiteA
-        self.lbl_Pieza(self.caballoBlanco, "B1")          # CaballoWhiteB
-        self.lbl_Pieza(self.alfilBlanco, "C1")            # AlfilWhiteB 
-        self.lbl_Pieza(self.damaBlanca, "D1")             # DamaWhite
-        self.lbl_Pieza(self.reyBlanco, "E1")              # ReyWhite
-        self.lbl_Pieza(self.alfilBlanco, "F1")            # AlfilWhiteW
-        self.lbl_Pieza(self.caballoBlanco, "G1")          # CaballoWhiteG
-        self.lbl_Pieza(self.torreBlanca, "H1")           # TorreWhiteH
-        
-        self.lbl_Pieza(self.torreNegra, "A8")             # TorreBlackA
-        self.lbl_Pieza(self.caballoNegro, "B8")           # CaballoBlackB
-        self.lbl_Pieza(self.alfilNegro, "C8")             # AlfilBlackB
-        self.lbl_Pieza(self.damaNegra, "D8")              # DamaBlack
-        self.lbl_Pieza(self.reyNegro, "E8")               # ReyBlack
-        self.lbl_Pieza(self.alfilNegro, "F8")             # AlfilBlackW
-        self.lbl_Pieza(self.caballoNegro, "G8")           # CaballoBlackG
-        self.lbl_Pieza(self.torreNegra, "H8")            # TorreBlackH
-        
-        letras = ["A", "B", "C", "D", "E", "F", "G", "H"]
-        for letra in letras:
-            self.lbl_Pieza(self.peonBlanco, f"{letra}2")
-            self.lbl_Pieza(self.peonNegro, f"{letra}7")
+    def colocar_Piezas_Inicio(self): 
+        for _, pieza in self.piezas.items():
+            self.lbl_Pieza(pieza["directorio"], pieza["coordenada"])
         
 if __name__ == "__main__":
     screen = tk.Tk()
