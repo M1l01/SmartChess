@@ -22,3 +22,6 @@ Pawn Rules:
   en esa dirección.
 """
 
+class MovPawn:
+    def primer_mov(self):
+        print("Primer Movimiento")

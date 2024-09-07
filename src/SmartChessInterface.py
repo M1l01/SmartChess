@@ -46,6 +46,25 @@ class SmartChess:
         #       """Importar Datos de las Piezas"""
         self.piezas = self.cargar_datos_piezas()
 
+        #       """Variables Globales"""
+        # Menu Inicio
+        self.lblMenu = tk.Label(self.screen)
+        self.lblLogo = tk.Label(self.screen)
+        self.lblJuegaAjedrez = tk.Label(self.screen)
+        self.btnJuegoPresencial = tk.Button(self.screen)
+        self.btnJuegoVirtual = tk.Button(self.screen)
+
+        # Registro de Partida
+        self.cuadroInterno = tk.Label(self.screen)
+        self.lblLineaVertical = tk.Label(self.screen)
+        self.lblLineaHorizontal = tk.Label(self.screen)
+        self.lblTitleRegistro = tk.Label(self.screen)
+        self.lblTeamWhite = tk.Label(self.screen)
+        self.lblTeamBlack = tk.Label(self.screen)
+
+        # Tablero
+        self.cuadricula = Canvas()
+
         #   """Create Widgets"""
         self.crear_widgets()
 
@@ -82,13 +101,13 @@ class SmartChess:
         lblTablero.place(x=260, y=110, width=880, height=880)
 
         #Cuadricula
-        cuadricula = Canvas(self.screen, width=800, height=800, highlightthickness=2)
-        cuadricula.place(x=300, y=150)
+        self.cuadricula = Canvas(self.screen, width=800, height=800, highlightthickness=2)
+        self.cuadricula.place(x=300, y=150)
         dimCasilla = 100
         for f in range(0,8):
             for c in range(0,8):
                 color = "#9e9fa2" if ((c%2==0) and (f%2==0)) or ((c%2!=0) and (f%2!=0)) else "#0d4a6a"
-                cuadricula.create_rectangle(c*dimCasilla, f*dimCasilla,c*dimCasilla+100,
+                self.cuadricula.create_rectangle(c*dimCasilla, f*dimCasilla,c*dimCasilla+100,
                                                  f*dimCasilla+100, fill=color, outline=color)
     
         #Labels para identificacion de coords
@@ -114,28 +133,27 @@ class SmartChess:
             contador -= 1
 
     def menu_juega_ajedrez(self):
-        global btnJuegoPresencial, btnJuegoVirtual
 
-        lblPest = tk.Label(self.screen, text="", bg="#232427")
-        lblPest.place(x=1200, y=110, width=650, height=880)
+        self.lblMenu.config(text="", bg="#232427")
+        self.lblMenu.place(x=1200, y=110, width=650, height=880)
 
         logoImg = ImgLabel("..//SmartChess//src//images//logo.png", (250,250)).pngLabel((35,36,39,255))
-        lblLogo = tk.Label(self.screen, image=logoImg, bg="#232427", bd=0)
-        lblLogo.image=logoImg
-        lblLogo.place(x=1400, y=270)
+        self.lblLogo.config(image=logoImg, bg="#232427", bd=0)
+        self.lblLogo.image=logoImg
+        self.lblLogo.place(x=1400, y=270)
 
-        lblJuegaAjedrez = tk.Label(self.screen, text="Juega al Ajedrez", bg="#232427",
+        self.lblJuegaAjedrez.config(text="Juega al Ajedrez", bg="#232427",
                                         fg="#ffffff", font=("Comic Sans MS", 48, "bold"))
-        lblJuegaAjedrez.place(x=1260, y=180)
+        self.lblJuegaAjedrez.place(x=1260, y=180)
         
         # Botones
-        btnJuegoPresencial = tk.Button(self.screen, text="Juego en Tablero",command=self.Juego_Presencial, activebackground="#030428", activeforeground="#767676",
+        self.btnJuegoPresencial.config(text="Juego en Tablero",command=self.Juego_Presencial, activebackground="#030428", activeforeground="#767676",
                                        bg="#030428", fg="white", cursor="hand2", font=("Comic Sans MS", 26, "bold"), bd=0)
-        btnJuegoPresencial.place(x=1325, y=750, width=400, height=90)
+        self.btnJuegoPresencial.place(x=1325, y=750, width=400, height=90)
 
-        btnJuegoVirtual = tk.Button(self.screen, text="Juego Virtual", command= self.Inicio_Juego_Virtual,bg="#030428", fg="white", activebackground="#030428", activeforeground="#767676",
+        self.btnJuegoVirtual.config(text="Juego Virtual", command=self.Inicio_Juego_Virtual, bg="#030428", fg="white", activebackground="#030428", activeforeground="#767676",
                                          cursor="hand2", font=("Comic Sans MS", 26, "bold"), bd=0)
-        btnJuegoVirtual.place(x=1325, y=550, width=400, height=90)
+        self.btnJuegoVirtual.place(x=1325, y=550, width=400, height=90)
 
     def Intruccion_colocar_Piezas(self, screen):
         lblInfoTxt = tk.Label(screen, text="Coloque las piezas\npara iniciar la partida", bg="#232427",
@@ -184,7 +202,7 @@ class SmartChess:
         for _, pieza in self.piezas.items():
             lblpieza = self.lbl_Pieza(pieza["directorio"], pieza["coordenada"])
             listaPiezas.append((lblpieza, pieza))
-            print((lblpieza, pieza))
+            # print((lblpieza, pieza))
         return listaPiezas
     
     def animacion_inicio_juego(self):
@@ -203,12 +221,32 @@ class SmartChess:
         animacionScreen3 = Animations(screen3)
         animacionScreen3.desvanecimiento_horizontal(posInicialX=383,posY=456,geometryX=450,geometryY=250,posFinalX=783,step=0.02)
     
+    def Interface_Registro_Partida(self):
+        self.lblMenu.config(bg="#100803")
+
+        self.cuadroInterno.config(text="", bg="#0d4a6a")
+        self.cuadroInterno.place(x=1220, y=130, width=610, height=840)
+
+        self.lblLineaHorizontal = tk.Label(self.screen, text="", bg="white")
+        self.lblLineaHorizontal.place(x=1280, y=300, width=500, height=3)
+
+        self.lblLineaVertical = tk.Label(self.screen, text="", bg="white")
+        self.lblLineaVertical.place(x=1529, y=240, width=3, height=700)
+
+        self.lblTitleRegistro.config(text="REGISTRO DE MOVIMIENTOS", bg="#0d4a6a", fg="#ffffff",
+                                     font=("Comic Sans MS", 24, "bold"))
+        self.lblTitleRegistro.place(x=1280, y=145)
+
+        self.lblTeamWhite.config(text="Team White", bg="#0d4a6a", fg="#ffffff",
+                                 font=("Comic Sans MS", 18, "bold"))
+        self.lblTeamWhite.place(x=1320, y=250)
+
+        self.lblTeamBlack.config(text="Team Black", bg="#0d4a6a", fg="#ffffff",
+                                 font=("Comic Sans MS", 18, "bold"))
+        self.lblTeamBlack.place(x=1580, y=250)
+    
     #                               """Juego Presencial"""  
     def Juego_Presencial(self):
-        global btnJuegoPresencial
-
-        btnJuegoPresencial.config(state="disable")
-
         #Crear ventana de Info
         screen2 = Toplevel(self.screen)
         screen2.title("Ajuste Parámetros")
@@ -221,7 +259,6 @@ class SmartChess:
 
             #Ventana de Inicio de Juego
             self.Inicio_Juego_Presencial()
-            btnJuegoPresencial.config(state="normal")
         else:
             self.Intruccion_colocar_Piezas(screen2)
 
@@ -230,23 +267,47 @@ class SmartChess:
 
     #                               """Juego Virtual"""
     def Inicio_Juego_Virtual(self):
-        global btnJuegoVirtual
-
-        btnJuegoVirtual.config(state="disabled")
         piezas = self.colocar_Piezas_Inicio()
 
         iteradorPiezas = 0
         self.deteccion_entrada_piezas(piezas, iteradorPiezas)
+        
+        #Detrucción de Menu de Inicio
+        self.lblLogo.destroy()
+        self.lblJuegaAjedrez.destroy()
+        self.btnJuegoPresencial.destroy()
+        self.btnJuegoVirtual.destroy()
 
+        # Registro de Partida
+        self.Interface_Registro_Partida()
+        
+        # Animación de Inicio de Juego
         self.animacion_inicio_juego()
-        btnJuegoVirtual.config(state="normal")
     
-    def Entrada_Pieza(self, event, tipo, coordenada):
+    def Entrada_Pieza(self, event):
         event.widget.config(cursor="hand2")
 
-    def btn_pieza(self, event, tipo, coordenada):
+    def deteccion_entrada_piezas(self, piezas, idx):
+        tipo = piezas[idx][1]["tipo"]
+        coordenada = piezas[idx][1]["coordenada"]
+        team = piezas[idx][1]["team"]
+        estado = piezas[idx][1]["estado"]
+
+        piezas[idx][0].bind("<Enter>", lambda event: self.Entrada_Pieza(event))
+        piezas[idx][0].bind("<Button-1>", lambda event: self.movimiento_piezas(event, tipo, coordenada))
+
+        idx +=1
+        if (idx >= len(piezas)):
+            idx = 0
+
+        self.screen.after(50, self.deteccion_entrada_piezas, piezas, idx)
+        
+    def movimiento_piezas(self, event, tipo, coordenada):
+        #               """Movimiento de las Piezas"""
         match tipo:
             case "peon":
+                x0, y0 = 35, 535
+                self.cuadricula.create_oval(x0, y0, x0+30, y0+30, outline="#b9b8b8", fill="#b9b8b8", width=1)
                 print("Es un peon")
             case "torre":
                 print("Es una torre")
@@ -261,19 +322,6 @@ class SmartChess:
             case _:
                 print("No es una pieza")
 
-    def deteccion_entrada_piezas(self, piezas, idx):
-        tipo = piezas[idx][1]["tipo"]
-        coordenada = piezas[idx][1]["coordenada"]
-
-        piezas[idx][0].bind("<Enter>", lambda event: self.Entrada_Pieza(event, tipo, coordenada))
-        piezas[idx][0].bind("<Button-1>", lambda event: self.btn_pieza(event, tipo, coordenada))
-
-        idx +=1
-        if (idx >= len(piezas)):
-            idx = 0
-
-        self.screen.after(50, self.deteccion_entrada_piezas, piezas, idx)
-        
 if __name__ == "__main__":
     screen = tk.Tk()
     #Matriz de Deteccion en inicio de Partida
