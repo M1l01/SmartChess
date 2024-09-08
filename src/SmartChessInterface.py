@@ -302,15 +302,17 @@ class SmartChess:
         idx += 1
         
         if(self.isWhitetime):
+            print("Turno Blancas")
             for i in range(16,32):
-                piezas[i][0].unbind("<Enter>")
                 piezas[i][0].unbind("<Button-1>")
+
             if (idx > len(piezas)/2 - 1):
                 idx = 0
         else:
+            print("Turno Negras")
             for j in range(0, 16):
-                piezas[j][0].unbind("<Enter>")
                 piezas[j][0].unbind("<Button-1>")
+
             if(idx > len(piezas) - 1):
                 idx = int(len(piezas)/2)
         
@@ -319,12 +321,8 @@ class SmartChess:
     def movimiento_piezas(self, event, tipo, coordenada, team, estado):
         #               """Movimiento de las Piezas"""
         match tipo:
-            case "peon":
-                x0, y0 = 35, 535
-                self.cuadricula.create_oval(x0, y0, x0+30, y0+30, outline="#b9b8b8", fill="#b9b8b8", width=1)
-                self.isWhitetime = False if (self.isWhitetime) else True
-                print(self.isWhitetime)
-                print(f"Es un peon de la casilla {coordenada}")
+            case "peon":              
+                print("Es un peon")
             case "torre":
                 print("Es una torre")
             case "caballo":
