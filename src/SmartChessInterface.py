@@ -43,6 +43,9 @@ class SmartChess:
             [1,1,1,1,1,1,1,1]  #1
         ]
 
+        self.isWhitetime = True # Control de Turno
+        self.isMoveComplete = False
+
         #       """Importar Datos de las Piezas"""
         self.piezas = self.cargar_datos_piezas()
 
@@ -268,9 +271,6 @@ class SmartChess:
     #                               """Juego Virtual"""
     def Inicio_Juego_Virtual(self):
         piezas = self.colocar_Piezas_Inicio()
-
-        iteradorPiezas = 0
-        self.deteccion_entrada_piezas(piezas, iteradorPiezas)
         
         #Detrucción de Menu de Inicio
         self.lblLogo.destroy()
@@ -280,6 +280,9 @@ class SmartChess:
 
         # Registro de Partida
         self.Interface_Registro_Partida()
+
+        iteradorPiezas = 0
+        self.deteccion_entrada_piezas(piezas, iteradorPiezas)
         
         # Animación de Inicio de Juego
         self.animacion_inicio_juego()
@@ -294,21 +297,34 @@ class SmartChess:
         estado = piezas[idx][1]["estado"]
 
         piezas[idx][0].bind("<Enter>", lambda event: self.Entrada_Pieza(event))
-        piezas[idx][0].bind("<Button-1>", lambda event: self.movimiento_piezas(event, tipo, coordenada))
-
-        idx +=1
-        if (idx >= len(piezas)):
-            idx = 0
-
+        piezas[idx][0].bind("<Button-1>", lambda event: self.movimiento_piezas(event, tipo, coordenada, team, estado))
+        
+        idx += 1
+        
+        if(self.isWhitetime):
+            for i in range(16,32):
+                piezas[i][0].unbind("<Enter>")
+                piezas[i][0].unbind("<Button-1>")
+            if (idx > len(piezas)/2 - 1):
+                idx = 0
+        else:
+            for j in range(0, 16):
+                piezas[j][0].unbind("<Enter>")
+                piezas[j][0].unbind("<Button-1>")
+            if(idx > len(piezas) - 1):
+                idx = int(len(piezas)/2)
+        
         self.screen.after(50, self.deteccion_entrada_piezas, piezas, idx)
         
-    def movimiento_piezas(self, event, tipo, coordenada):
+    def movimiento_piezas(self, event, tipo, coordenada, team, estado):
         #               """Movimiento de las Piezas"""
         match tipo:
             case "peon":
                 x0, y0 = 35, 535
                 self.cuadricula.create_oval(x0, y0, x0+30, y0+30, outline="#b9b8b8", fill="#b9b8b8", width=1)
-                print("Es un peon")
+                self.isWhitetime = False if (self.isWhitetime) else True
+                print(self.isWhitetime)
+                print(f"Es un peon de la casilla {coordenada}")
             case "torre":
                 print("Es una torre")
             case "caballo":
