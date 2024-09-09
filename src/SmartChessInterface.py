@@ -6,6 +6,7 @@ from tkinter import ttk
 from PIL import Image, ImageDraw, ImageFont, ImageTk
 from common.utils import ImgLabel, Coords
 from animations import Animations
+from rules.pawn_move import Pawn
 import json
 
 """
@@ -158,7 +159,7 @@ class SmartChess:
                                          cursor="hand2", font=("Comic Sans MS", 26, "bold"), bd=0)
         self.btnJuegoVirtual.place(x=1325, y=550, width=400, height=90)
 
-    def Intruccion_colocar_Piezas(self, screen):
+    def Instruccion_colocar_Piezas(self, screen):
         lblInfoTxt = tk.Label(screen, text="Coloque las piezas\npara iniciar la partida", bg="#232427",
                                 fg="#ffffff", font=("Comic Sans MS", 20, "bold"))
         lblInfoTxt.place(x=20, y=20, width=350, height=80)
@@ -171,7 +172,7 @@ class SmartChess:
     def lbl_Pieza(self, dirImg, coord):
         try:
             coordenadas = Coords()
-            pos = coordenadas.optencion_coordenadas(coord)
+            pos = coordenadas.obtencion_coordenadas_piezas(coord)
             [bgcolor, bgcolorrgba] = ["#dad9b5", (158, 159, 162, 255)] if (((pos[0] + pos[1] - 60)/100)%2 == 0) else ["#0d4a6a", (13, 74, 106, 255)]
             cache_key = (dirImg, (90,90), bgcolorrgba) #Uso de cache para mejorar el rendimiento del programa
             if cache_key not in self.cache:
@@ -203,9 +204,8 @@ class SmartChess:
     def colocar_Piezas_Inicio(self):
         listaPiezas = []
         for _, pieza in self.piezas.items():
-            lblpieza = self.lbl_Pieza(pieza["directorio"], pieza["coordenada"])
+            lblpieza = self.lbl_Pieza(pieza["directorio"], pieza["coordenada"][0])
             listaPiezas.append((lblpieza, pieza))
-            # print((lblpieza, pieza))
         return listaPiezas
     
     def animacion_inicio_juego(self):
@@ -263,7 +263,7 @@ class SmartChess:
             #Ventana de Inicio de Juego
             self.Inicio_Juego_Presencial()
         else:
-            self.Intruccion_colocar_Piezas(screen2)
+            self.Instruccion_colocar_Piezas(screen2)
 
     def Inicio_Juego_Presencial(self):
         self.animacion_inicio_juego()
@@ -302,27 +302,28 @@ class SmartChess:
         idx += 1
         
         if(self.isWhitetime):
-            print("Turno Blancas")
+            #print("Turno Blancas")
             for i in range(16,32):
                 piezas[i][0].unbind("<Button-1>")
 
             if (idx > len(piezas)/2 - 1):
                 idx = 0
         else:
-            print("Turno Negras")
+            #print("Turno Negras")
             for j in range(0, 16):
                 piezas[j][0].unbind("<Button-1>")
 
             if(idx > len(piezas) - 1):
                 idx = int(len(piezas)/2)
         
-        self.screen.after(50, self.deteccion_entrada_piezas, piezas, idx)
+        self.screen.after(20, self.deteccion_entrada_piezas, piezas, idx)
         
     def movimiento_piezas(self, event, tipo, coordenada, team, estado):
         #               """Movimiento de las Piezas"""
         match tipo:
-            case "peon":              
-                print("Es un peon")
+            case "peon":
+                Pawn(self.cuadricula, coordenada[-1], team).movimiento_peon()  
+                self.isWhitetime = not self.isWhitetime
             case "torre":
                 print("Es una torre")
             case "caballo":

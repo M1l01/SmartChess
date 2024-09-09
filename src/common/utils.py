@@ -30,7 +30,7 @@ class ImgLabel:
         return None
 
 class Coords:
-    def optencion_coordenadas(self, coord):
+    def obtencion_coordenadas_piezas(self, coord):
         try:
             if len(coord) == 2:
                 letra = ord(coord[0])

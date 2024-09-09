@@ -24,12 +24,45 @@ en esa dirección.
 """
 import tkinter as tk
 from tkinter import Canvas
+from common.utils import Coords
 
 class Pawn:
-    def __init__(self, canvas = Canvas):
-       self.canvas = canvas
+  def __init__(self, canvas = Canvas, coordenada="A1", team="white"):
+    self.canvas = canvas
+    self.coordenada = coordenada
+    self.team = team
 
-    def movimientoWhite(self, coordenada):
-      if(coordenada[1] == 2):
-        # primer movimiento de peon blanco
-        self.canvas.create_oval()
+  def movimiento_peon(self):
+    self.casillas_primer_movimiento()
+    self.crear_punto_captura()
+
+  def click_circulo(self, event):
+    print("click en punto")
+
+  def casillas_primer_movimiento(self):
+    #Primer Movimiento
+    if int(self.coordenada[1]) == 2:
+      for fila in range(1,3):
+        posibleCoord = Coords().obtencion_coordenadas_piezas(self.coordenada[0] + str(int(self.coordenada[1]) + fila))
+        x0, y0 = posibleCoord[0]-270, posibleCoord[1]-120
+        punto = self.canvas.create_oval(x0, y0, x0+30, y0+30, outline="", fill="black")
+        self.canvas.tag_bind(punto, "<Button-1>", self.click_circulo)
+
+  def crear_punto_captura(self):
+    # Detección para captura
+    if self.coordenada[0] == chr(65): #Columna A
+      # Revisamos diagonal derecha - Columna B
+      posibleCoord = Coords().obtencion_coordenadas_piezas(chr(ord(self.coordenada[0]) + 1) + str(int(self.coordenada[1])+1))
+      x0,y0 = posibleCoord[0]-270, posibleCoord[1]-120
+      punto=self.canvas.create_oval(x0, y0, x0+30, y0+30, outline="black", fill="")
+      self.canvas.tag_bind(punto, "<Button-1>", self.click_circulo)
+    elif self.coordenada[0] >= chr(66) or self.coordenada[0] <= chr(71):
+      # Revisamos las 2 diagonales
+      posibleCoord1 = chr(ord(self.coordenada[0])+1) + str(int(self.coordenada[1])+1)
+      posibleCoord2 = chr(ord(self.coordenada[0])-1) + str(int(self.coordenada[1])+1)
+    elif self.coordenada[0] == chr(72):
+      # Revisamos diagonal izquierda - Columna G
+      posibleCoord = chr(ord(self.coordenada[0])+1) + str(int(self.coordenada[1])+1)
+    else:
+      print("Coordenada fuera de rango")
+
