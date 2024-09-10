@@ -3,224 +3,319 @@
         "tipo": "torre",
         "directorio": "..//SmartChess//src//images//torre_blanca.png",
         "team": "white",
-        "coordenada": ["A1"],
-        "estado": "vivo"
+        "coordenada": [
+            "A1"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "caballoBlancoB": {
         "tipo": "caballo",
         "directorio": "..//SmartChess//src//images//caballo_blanco.png",
         "team": "white",
-        "coordenada": ["B1"],
-        "estado": "vivo" 
+        "coordenada": [
+            "B1"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "alfilBlancoC": {
         "tipo": "alfil",
         "directorio": "..//SmartChess//src//images//alfil_blanco.png",
         "team": "white",
-        "coordenada": ["C1"],
-        "estado": "vivo"
+        "coordenada": [
+            "C1"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "damaBlanca": {
         "tipo": "dama",
         "directorio": "..//SmartChess//src//images//dama_blanca.png",
         "team": "white",
-        "coordenada": ["D1"],
-        "estado": "vivo"
+        "coordenada": [
+            "D1"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "reyBlanco": {
         "tipo": "rey",
         "directorio": "..//SmartChess//src//images//rey_blanco.png",
         "team": "white",
-        "coordenada": ["E1"],
-        "estado": "vivo"
+        "coordenada": [
+            "E1"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "alfilBlancoF": {
         "tipo": "alfil",
         "directorio": "..//SmartChess//src//images//alfil_blanco.png",
         "team": "white",
-        "coordenada": ["F1"],
-        "estado": "vivo"
+        "coordenada": [
+            "F1"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "caballoBlancoG": {
         "tipo": "caballo",
         "directorio": "..//SmartChess//src//images//caballo_blanco.png",
         "team": "white",
-        "coordenada": ["G1"],
-        "estado": "vivo"
+        "coordenada": [
+            "G1"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "torreBlancaH": {
         "tipo": "torre",
         "directorio": "..//SmartChess//src//images//torre_blanca.png",
         "team": "white",
-        "coordenada": ["H1"],
-        "estado": "vivo"
+        "coordenada": [
+            "H1"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "peonBlancoA": {
         "tipo": "peon",
         "directorio": "..//SmartChess//src//images//peon_blanco.png",
         "team": "white",
-        "coordenada": ["A2"],
-        "estado": "vivo"
+        "coordenada": [
+            "A2"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "peonBlancoB": {
         "tipo": "peon",
         "directorio": "..//SmartChess//src//images//peon_blanco.png",
         "team": "white",
-        "coordenada": ["B2"],
-        "estado": "vivo"
+        "coordenada": [
+            "B2"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "peonBlancoC": {
         "tipo": "peon",
         "directorio": "..//SmartChess//src//images//peon_blanco.png",
         "team": "white",
-        "coordenada": ["C2"],
-        "estado": "vivo"
+        "coordenada": [
+            "C2"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "peonBlancoD": {
         "tipo": "peon",
         "directorio": "..//SmartChess//src//images//peon_blanco.png",
         "team": "white",
-        "coordenada": ["D2"],
-        "estado": "vivo"
+        "coordenada": [
+            "D2"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "peonBlancoE": {
         "tipo": "peon",
         "directorio": "..//SmartChess//src//images//peon_blanco.png",
         "team": "white",
-        "coordenada": ["E2"],
-        "estado": "vivo"
+        "coordenada": [
+            "E2"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "peonBlancoF": {
         "tipo": "peon",
         "directorio": "..//SmartChess//src//images//peon_blanco.png",
         "team": "white",
-        "coordenada": ["F2"],
-        "estado": "vivo"
-    }, 
+        "coordenada": [
+            "F2"
+        ],
+        "estado": "vivo",
+        "move": false
+    },
     "peonBlancoG": {
         "tipo": "peon",
         "directorio": "..//SmartChess//src//images//peon_blanco.png",
         "team": "white",
-        "coordenada": ["G2"],
-        "estado": "vivo"
+        "coordenada": [
+            "G2"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "peonBlancoH": {
         "tipo": "peon",
         "directorio": "..//SmartChess//src//images//peon_blanco.png",
         "team": "white",
-        "coordenada": ["H2"],
-        "estado": "vivo"
+        "coordenada": [
+            "H2"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "torreNegraA": {
         "tipo": "torre",
         "directorio": "..//SmartChess//src//images//torre_negra.png",
         "team": "black",
-        "coordenada": ["A8"],
-        "estado": "vivo"
+        "coordenada": [
+            "A8"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "caballoNegroB": {
         "tipo": "caballo",
         "directorio": "..//SmartChess//src//images//caballo_negro.png",
         "team": "black",
-        "coordenada": ["B8"],
+        "coordenada": [
+            "B8"
+        ],
         "estado": "vivo"
     },
     "alfilNegroC": {
         "tipo": "alfil",
         "directorio": "..//SmartChess//src//images//alfil_negro.png",
         "team": "black",
-        "coordenada": ["C8"],
-        "estado": "vivo"
+        "coordenada": [
+            "C8"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "damaNegra": {
         "tipo": "dama",
         "directorio": "..//SmartChess//src//images//dama_negra.png",
         "team": "black",
-        "coordenada": ["D8"],
-        "estado": "vivo"
+        "coordenada": [
+            "D8"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "reyNegro": {
         "tipo": "rey",
         "directorio": "..//SmartChess//src//images//rey_negro.png",
         "team": "black",
-        "coordenada": ["E8"],
-        "estado": "vivo"
+        "coordenada": [
+            "E8"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "alfilNegroF": {
         "tipo": "alfil",
         "directorio": "..//SmartChess//src//images//alfil_negro.png",
         "team": "black",
-        "coordenada": ["F8"],
-        "estado": "vivo"
+        "coordenada": [
+            "F8"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "caballoNegroG": {
         "tipo": "caballo",
         "directorio": "..//SmartChess//src//images//caballo_negro.png",
         "team": "black",
-        "coordenada": ["G8"],
-        "estado": "vivo"
+        "coordenada": [
+            "G8"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "torreNegraH": {
         "tipo": "torre",
         "directorio": "..//SmartChess//src//images//torre_negra.png",
         "team": "black",
-        "coordenada": ["H8"],
-        "estado": "vivo"
+        "coordenada": [
+            "H8"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "peonNegroA": {
         "tipo": "peon",
         "directorio": "..//SmartChess//src//images//peon_negro.png",
         "team": "black",
-        "coordenada": ["A7"],
-        "estado": "vivo"
+        "coordenada": [
+            "A7"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "peonNegroB": {
         "tipo": "peon",
         "directorio": "..//SmartChess//src//images//peon_negro.png",
         "team": "black",
-        "coordenada": ["B7"],
-        "estado": "vivo"
+        "coordenada": [
+            "B7"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "peonNegroC": {
         "tipo": "peon",
         "directorio": "..//SmartChess//src//images//peon_negro.png",
         "team": "black",
-        "coordenada": ["C7"],
-        "estado": "vivo"
+        "coordenada": [
+            "C7"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "peonNegroD": {
         "tipo": "peon",
         "directorio": "..//SmartChess//src//images//peon_negro.png",
         "team": "black",
-        "coordenada": ["D7"],
-        "estado": "vivo"
+        "coordenada": [
+            "D7"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "peonNegroE": {
         "tipo": "peon",
         "directorio": "..//SmartChess//src//images//peon_negro.png",
         "team": "black",
-        "coordenada": ["E7"],
-        "estado": "vivo"
+        "coordenada": [
+            "E7"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "peonNegroF": {
         "tipo": "peon",
         "directorio": "..//SmartChess//src//images//peon_negro.png",
         "team": "black",
-        "coordenada": ["F7"],
-        "estado": "vivo"
-    }, 
+        "coordenada": [
+            "F7"
+        ],
+        "estado": "vivo",
+        "move": false
+    },
     "peonNegroG": {
         "tipo": "peon",
         "directorio": "..//SmartChess//src//images//peon_negro.png",
         "team": "black",
-        "coordenada": ["G7"],
-        "estado": "vivo"
+        "coordenada": [
+            "G7"
+        ],
+        "estado": "vivo",
+        "move": false
     },
     "peonNegroH": {
         "tipo": "peon",
         "directorio": "..//SmartChess//src//images//peon_negro.png",
         "team": "black",
-        "coordenada": ["H7"],
-        "estado": "vivo"
+        "coordenada": [
+            "H7"
+        ],
+        "estado": "vivo",
+        "move": false
     }
 }

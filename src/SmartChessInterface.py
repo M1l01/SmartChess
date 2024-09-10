@@ -7,7 +7,8 @@ from PIL import Image, ImageDraw, ImageFont, ImageTk
 from common.utils import ImgLabel, Coords
 from animations import Animations
 from rules.pawn_move import Pawn
-import json
+import ImportarJson
+
 
 """
 Paleta de Colores de la aplicación
@@ -48,7 +49,11 @@ class SmartChess:
         self.isMoveComplete = False
 
         #       """Importar Datos de las Piezas"""
-        self.piezas = self.cargar_datos_piezas()
+        self.piezas = ImportarJson.ImportarJson().import_datos()
+
+        self.ListaPiezas = []
+        self.ListaLabelsPiezas = []
+        self.ListaPuntos = []
 
         #       """Variables Globales"""
         # Menu Inicio
@@ -71,14 +76,6 @@ class SmartChess:
 
         #   """Create Widgets"""
         self.crear_widgets()
-
-    def cargar_datos_piezas(self):
-        try:
-            with open('..//SmartChess//src//piezas.json', 'r') as archivo:
-                piezas = json.load(archivo)
-            return piezas
-        except FileNotFoundError:
-            return {"Pieza": []}
 
     def crear_widgets(self):
         self.Title()                    # Title
@@ -202,12 +199,11 @@ class SmartChess:
         return None
     
     def colocar_Piezas_Inicio(self):
-        listaPiezas = []
-        for _, pieza in self.piezas.items():
+        for nombre, pieza in self.piezas.items():            
             lblpieza = self.lbl_Pieza(pieza["directorio"], pieza["coordenada"][0])
-            listaPiezas.append((lblpieza, pieza))
-        return listaPiezas
-    
+            self.ListaPiezas.append((nombre, pieza))
+            self.ListaLabelsPiezas.append(lblpieza)
+
     def animacion_inicio_juego(self):
         #       """Configuración de Screen 3"""
         screen3 = Toplevel(self.screen)
@@ -261,16 +257,13 @@ class SmartChess:
             screen2.destroy()   #Cerramos ventana de Info
 
             #Ventana de Inicio de Juego
-            self.Inicio_Juego_Presencial()
+            self.animacion_inicio_juego()
         else:
             self.Instruccion_colocar_Piezas(screen2)
 
-    def Inicio_Juego_Presencial(self):
-        self.animacion_inicio_juego()
-
     #                               """Juego Virtual"""
     def Inicio_Juego_Virtual(self):
-        piezas = self.colocar_Piezas_Inicio()
+        self.colocar_Piezas_Inicio()
         
         #Detrucción de Menu de Inicio
         self.lblLogo.destroy()
@@ -281,61 +274,68 @@ class SmartChess:
         # Registro de Partida
         self.Interface_Registro_Partida()
 
-        iteradorPiezas = 0
-        self.deteccion_entrada_piezas(piezas, iteradorPiezas)
+        self.deteccion_entrada_piezas()
         
         # Animación de Inicio de Juego
         self.animacion_inicio_juego()
-    
-    def Entrada_Pieza(self, event):
-        event.widget.config(cursor="hand2")
 
-    def deteccion_entrada_piezas(self, piezas, idx):
-        tipo = piezas[idx][1]["tipo"]
-        coordenada = piezas[idx][1]["coordenada"]
-        team = piezas[idx][1]["team"]
-        estado = piezas[idx][1]["estado"]
-
-        piezas[idx][0].bind("<Enter>", lambda event: self.Entrada_Pieza(event))
-        piezas[idx][0].bind("<Button-1>", lambda event: self.movimiento_piezas(event, tipo, coordenada, team, estado))
-        
+    def deteccion_entrada_piezas(self, idx=0):
         idx += 1
         
+        self.ListaLabelsPiezas[idx-1].bind("<Enter>", lambda event: self.Entrada_Pieza(event))
+        self.ListaLabelsPiezas[idx-1].bind("<Button-1>", lambda event: self.movimiento_piezas(event, idx-1))
+                
         if(self.isWhitetime):
             #print("Turno Blancas")
             for i in range(16,32):
-                piezas[i][0].unbind("<Button-1>")
+                self.ListaLabelsPiezas[i].unbind("<Button-1>")
 
-            if (idx > len(piezas)/2 - 1):
+            if (idx-1 > len(self.ListaLabelsPiezas)/2 - 1):
                 idx = 0
         else:
             #print("Turno Negras")
             for j in range(0, 16):
-                piezas[j][0].unbind("<Button-1>")
+                self.ListaLabelsPiezas[j].unbind("<Button-1>")
 
-            if(idx > len(piezas) - 1):
-                idx = int(len(piezas)/2)
+            if(idx-1 > len(self.ListaLabelsPiezas) - 2):
+                idx = int(len(self.ListaLabelsPiezas)/2)
         
-        self.screen.after(20, self.deteccion_entrada_piezas, piezas, idx)
+        self.screen.after(20, self.deteccion_entrada_piezas, idx)
         
-    def movimiento_piezas(self, event, tipo, coordenada, team, estado):
-        #               """Movimiento de las Piezas"""
-        match tipo:
+    def Entrada_Pieza(self, event):
+        event.widget.config(cursor="hand2")
+
+    def movimiento_piezas(self, event, idx):
+        nombrePieza = self.ListaPiezas[idx][0]
+        paramPieza = self.ListaPiezas[idx][1]
+        
+        tipo = self.ListaPiezas[idx][1]["tipo"]
+        coordenada = self.ListaPiezas[idx][1]["coordenada"][-1]
+
+        match (tipo):
             case "peon":
-                Pawn(self.cuadricula, coordenada[-1], team).movimiento_peon()  
-                self.isWhitetime = not self.isWhitetime
+                Peon = Pawn(nombrePieza, paramPieza, self.ListaPiezas)
+                self.eliminar_puntos(self.cuadricula, self.ListaPuntos)
+                puntosActuales = Peon.puntos_primer_movimiento(self.cuadricula)
+                self.ListaPuntos.append(puntosActuales)
+                print(f"Es un peon en {coordenada}")
             case "torre":
-                print("Es una torre")
+                print("Es un torre")
             case "caballo":
                 print("Es un caballo")
             case "alfil":
                 print("Es un alfil")
             case "dama":
-                print("Es una dama")
+                print("Es un dama")
             case "rey":
                 print("Es un rey")
             case _:
-                print("No es una pieza")
+                print("tipo de pieza no encontrada")
+
+    def eliminar_puntos(self, canvas, listaPuntos):
+        for puntos in listaPuntos:
+            for punto in puntos:
+                canvas.delete(punto)
 
 if __name__ == "__main__":
     screen = tk.Tk()

@@ -25,44 +25,64 @@ en esa dirección.
 import tkinter as tk
 from tkinter import Canvas
 from common.utils import Coords
+import ImportarJson
+
 
 class Pawn:
-  def __init__(self, canvas = Canvas, coordenada="A1", team="white"):
-    self.canvas = canvas
-    self.coordenada = coordenada
-    self.team = team
+  def __init__(self, nombrePieza, paramPieza, ListaClavesJson):
+    self.nombrePieza = nombrePieza
+    self.paramPieza = paramPieza
+    self.ListaClavesJson = ListaClavesJson
 
-  def movimiento_peon(self):
-    self.casillas_primer_movimiento()
-    self.crear_punto_captura()
+    self.puntosActuales = []
+  
+  def click_point(self, event):
+    print("click en punto, Mover la pieza a este punto")
+  
+  def puntos_primer_movimiento(self, canvas):
+    coordenadaActual = self.paramPieza["coordenada"][-1] #ultima ubicacion
+    team = self.paramPieza["team"]
+    if team == "white":
+      if int(coordenadaActual[1]) == 2: #Fila 2
+        #Crear Puntos
+        for fila in range(1,3):
+          posibleCoord = Coords().obtencion_coordenadas_piezas(coordenadaActual[0] + str(int(coordenadaActual[1]) + fila))
+          x0, y0 = posibleCoord[0]-270, posibleCoord[1]-120
+          punto = canvas.create_oval(x0, y0, x0+30, y0+30, outline="", fill="black")
+          canvas.tag_bind(punto, "<Button-1>", self.click_point)
+          self.puntosActuales.append(punto)
+    elif team == "black":
+      if int(coordenadaActual[1]) == 7:
+        for fila in range(1,3):
+          posibleCoord = Coords().obtencion_coordenadas_piezas(coordenadaActual[0] + str(int(coordenadaActual[1]) - fila))
+          x0, y0 = posibleCoord[0]-270, posibleCoord[1]-120
+          punto = canvas.create_oval(x0, y0, x0+30, y0+30, outline="", fill="black")
+          canvas.tag_bind(punto, "<Button-1>", self.click_point)
+          self.puntosActuales.append(punto)
+    
+    return self.puntosActuales
 
-  def click_circulo(self, event):
+
+
+  
+  
+  
+  
+  
+  """
+  def movimiento(self):
+    print("movimiento del peon")
+
+  def click_point(self, event):
     print("click en punto")
-
+  
   def casillas_primer_movimiento(self):
     #Primer Movimiento
-    if int(self.coordenada[1]) == 2:
+    if int(self.coordenada[1]) == 2 and self.team == "white":
       for fila in range(1,3):
         posibleCoord = Coords().obtencion_coordenadas_piezas(self.coordenada[0] + str(int(self.coordenada[1]) + fila))
         x0, y0 = posibleCoord[0]-270, posibleCoord[1]-120
         punto = self.canvas.create_oval(x0, y0, x0+30, y0+30, outline="", fill="black")
-        self.canvas.tag_bind(punto, "<Button-1>", self.click_circulo)
+        self.canvas.tag_bind(punto, "<Button-1>", self.click_point)
 
-  def crear_punto_captura(self):
-    # Detección para captura
-    if self.coordenada[0] == chr(65): #Columna A
-      # Revisamos diagonal derecha - Columna B
-      posibleCoord = Coords().obtencion_coordenadas_piezas(chr(ord(self.coordenada[0]) + 1) + str(int(self.coordenada[1])+1))
-      x0,y0 = posibleCoord[0]-270, posibleCoord[1]-120
-      punto=self.canvas.create_oval(x0, y0, x0+30, y0+30, outline="black", fill="")
-      self.canvas.tag_bind(punto, "<Button-1>", self.click_circulo)
-    elif self.coordenada[0] >= chr(66) or self.coordenada[0] <= chr(71):
-      # Revisamos las 2 diagonales
-      posibleCoord1 = chr(ord(self.coordenada[0])+1) + str(int(self.coordenada[1])+1)
-      posibleCoord2 = chr(ord(self.coordenada[0])-1) + str(int(self.coordenada[1])+1)
-    elif self.coordenada[0] == chr(72):
-      # Revisamos diagonal izquierda - Columna G
-      posibleCoord = chr(ord(self.coordenada[0])+1) + str(int(self.coordenada[1])+1)
-    else:
-      print("Coordenada fuera de rango")
-
+  """
