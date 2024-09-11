@@ -1,13 +1,10 @@
 import json
 
-class ImportarJson:
-    def __init__(self, nombrePieza = "", paramPieza = "", ListaClaves = []):
+class tratamientoJson:
+    def __init__(self, nombrePieza = ""):
         self.ruta = "..//SmartChess//src//piezas.json"
 
         self.nombrePieza = nombrePieza
-        self.paramPieza = paramPieza
-
-        self.ListaClaves = ListaClaves
 
     def import_datos(self):
         try:
@@ -24,25 +21,29 @@ class ImportarJson:
         except Exception as e:
             print(f"Error al guardar los datos: {e}")
 
-    def Almacenar_coordenada(self):
+    def Almacenar_coordenada(self, casillaSelect):
+        print(self.nombrePieza)
         piezasJson = self.import_datos()
         if self.nombrePieza in piezasJson:
-            print("si esta")
+            for clave, piezaParams in piezasJson.items():
+                if clave != self.nombrePieza:
+                    piezaParams["coordenada"].append(piezaParams["coordenada"][-1])
+            piezasJson[self.nombrePieza]["coordenada"].append(casillaSelect)
+            self.modificar_datos(piezasJson)
         else:
-            print("no esta")
+            print("No se encuentra esa pieza")
 
     def default_params(self):
         piezasJson = self.import_datos()
         for _, piezaParams in piezasJson.items():
             piezaParams["coordenada"] = [piezaParams["coordenada"][0]]
             piezaParams["estado"] = "vivo"
-            piezaParams["move"] = False
 
         self.modificar_datos(piezasJson)
             
 
 if __name__ == "__main__":
-    ImportarJson().Almacenar_coordenada()
+    tratamientoJson().Almacenar_coordenada("A3")
 
 
         

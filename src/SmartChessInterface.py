@@ -7,7 +7,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageTk
 from common.utils import ImgLabel, Coords
 from animations import Animations
 from rules.pawn_move import Pawn
-import ImportarJson
+from ImportarJson import tratamientoJson
 
 
 """
@@ -30,7 +30,7 @@ class SmartChess:
         self.screen.geometry("1920x1080")
         self.screen.config(bg="#5c5c5c")
 
-        ImportarJson.ImportarJson().default_params()
+        tratamientoJson().default_params()
 
         self.cache = {}
 
@@ -51,7 +51,7 @@ class SmartChess:
         self.isMoveComplete = False
 
         #       """Importar Datos de las Piezas"""
-        self.piezas = ImportarJson.ImportarJson().import_datos()
+        self.piezas = tratamientoJson().import_datos()
 
         self.ListaPiezas = []
         self.ListaLabelsPiezas = []
@@ -312,7 +312,6 @@ class SmartChess:
     def movimiento_piezas(self, event, nombrePieza, paramPieza, lblPiezaSelect):
         
         tipo = paramPieza["tipo"]
-        coordenada = paramPieza["coordenada"][-1]
 
         match (tipo):
             case "peon":                  

@@ -25,7 +25,7 @@ en esa dirección.
 import tkinter as tk
 from tkinter import Canvas
 from common.utils import Coords
-import ImportarJson
+from ImportarJson import tratamientoJson
 
 
 class Pawn:
@@ -39,12 +39,12 @@ class Pawn:
 
     self.puntosActuales = []
   
-  def click_point(self, event, Coord):
+  def click_point(self, event, Coord, casillaSelect):
     bgColor = "#9e9fa2" if (((Coord[0] + Coord[1] - 60)/100)%2 == 0) else "#0d4a6a"
     self.lblPiezaSelect.config(bg = bgColor)
     self.lblPiezaSelect.place(x=Coord[0], y=Coord[1])
 
-    
+    tratamientoJson(self.nombrePieza).Almacenar_coordenada(casillaSelect)  
     
     self.cambio_turno_callback()
     
@@ -59,60 +59,20 @@ class Pawn:
     if int(coordenadaActual[1]) == filaInicial:
       # Casilla al dar 1 paso
       nuevaFila = int(coordenadaActual[1]) + direccion
-      posibleCoord1 = Coords().obtencion_coordenadas_piezas(coordenadaActual[0] + str(nuevaFila))
+      casilla1 = coordenadaActual[0] + str(nuevaFila)
+      posibleCoord1 = Coords().obtencion_coordenadas_piezas(casilla1)
       x0_1, y0_1 = posibleCoord1[0]-270, posibleCoord1[1]-120
       punto1 = canvas.create_oval(x0_1, y0_1, x0_1+30, y0_1+30, outline="", fill="black")
-      canvas.tag_bind(punto1, "<Button-1>", lambda event: self.click_point(event, posibleCoord1))
+      canvas.tag_bind(punto1, "<Button-1>", lambda event: self.click_point(event, posibleCoord1, casilla1))
       self.puntosActuales.append(punto1)
 
       #Casilla al dar 2 pasos
       nuevaFila = int(coordenadaActual[1]) + (2*direccion)
-      posibleCoord2 = Coords().obtencion_coordenadas_piezas(coordenadaActual[0] + str(nuevaFila))
+      casilla2 = coordenadaActual[0] + str(nuevaFila)
+      posibleCoord2 = Coords().obtencion_coordenadas_piezas(casilla2)
       x0_2, y0_2 = posibleCoord2[0]-270, posibleCoord2[1]-120
       punto2 = canvas.create_oval(x0_2, y0_2, x0_2+30, y0_2+30, outline="", fill="black")
-      canvas.tag_bind(punto2, "<Button>", lambda event: self.click_point(event, posibleCoord2))
+      canvas.tag_bind(punto2, "<Button>", lambda event: self.click_point(event, posibleCoord2, casilla2))
       self.puntosActuales.append(punto2)
 
     return self.puntosActuales
-
-
-  # def crear_punto_primer_movimiento(self, canvas):
-  #   coordenadaActual = self.paramPieza["coordenada"][-1] #ultima ubicacion
-  #   team = self.paramPieza["team"]
-
-  #   direccion = 1 if team == "white" else -1
-
-  #   nuevaFila = int(coordenadaActual[1]) + direccion
-  #   posibleCoord1 = Coords().obtencion_coordenadas_piezas(coordenadaActual[0] + str(nuevaFila))
-  #   x0_1, y0_1 = posibleCoord1[0]-270, posibleCoord1[1]-120
-  #   punto1 = canvas.create_oval(x0_1, y0_1, x0_1+30, y0_1+30, outline="", fill="black")
-  #   canvas.tag_bind(punto1, "<Button-1>", lambda event: self.click_point(event, posibleCoord1))
-
-
-
-    
-
-
-
-  
-  
-  
-  
-  
-  """
-  def movimiento(self):
-    print("movimiento del peon")
-
-  def click_point(self, event):
-    print("click en punto")
-  
-  def casillas_primer_movimiento(self):
-    #Primer Movimiento
-    if int(self.coordenada[1]) == 2 and self.team == "white":
-      for fila in range(1,3):
-        posibleCoord = Coords().obtencion_coordenadas_piezas(self.coordenada[0] + str(int(self.coordenada[1]) + fila))
-        x0, y0 = posibleCoord[0]-270, posibleCoord[1]-120
-        punto = self.canvas.create_oval(x0, y0, x0+30, y0+30, outline="", fill="black")
-        self.canvas.tag_bind(punto, "<Button-1>", self.click_point)
-
-  """
