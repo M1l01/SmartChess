@@ -277,7 +277,7 @@
             "D7"
         ],
         "estado": "vivo",
-        "move": true
+        "move": false
     },
     "peonNegroE": {
         "tipo": "peon",

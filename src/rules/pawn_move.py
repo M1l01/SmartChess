@@ -40,11 +40,13 @@ class Pawn:
     self.puntosActuales = []
   
   def click_point(self, event, Coord):
-    #Cambio Move a True
-    ImportarJson.ImportarJson(self.nombrePieza).cambiar_move()
-    self.cambio_turno_callback()
+    bgColor = "#9e9fa2" if (((Coord[0] + Coord[1] - 60)/100)%2 == 0) else "#0d4a6a"
+    self.lblPiezaSelect.config(bg = bgColor)
     self.lblPiezaSelect.place(x=Coord[0], y=Coord[1])
-    print(Coord)
+
+    
+    
+    self.cambio_turno_callback()
     
   
   def puntos_movimiento(self, canvas):

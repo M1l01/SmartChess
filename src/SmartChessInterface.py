@@ -170,19 +170,17 @@ class SmartChess:
 
     def lbl_Pieza(self, dirImg, coord):
         try:
-            coordenadas = Coords()
-            pos = coordenadas.obtencion_coordenadas_piezas(coord)
-            [bgcolor, bgcolorrgba] = ["#dad9b5", (158, 159, 162, 255)] if (((pos[0] + pos[1] - 60)/100)%2 == 0) else ["#0d4a6a", (13, 74, 106, 255)]
+            pos = Coords().obtencion_coordenadas_piezas(coord)
+            [bgcolor, bgcolorrgba] = ["#9e9fa2", (158, 159, 162, 0)] if (((pos[0] + pos[1] - 60)/100)%2 == 0) else ["#0d4a6a", (13, 74, 106, 0)]
             cache_key = (dirImg, (90,90), bgcolorrgba) #Uso de cache para mejorar el rendimiento del programa
             if cache_key not in self.cache:
                 try:
                     image = Image.open(dirImg)
-                    imageResized = image.resize((90,90))
-                    fondo = Image.new("RGBA", imageResized.size, bgcolorrgba)
-                    imageResized = imageResized.convert("RGBA")
+                    imageResized = image.resize((90,90)).convert("RGBA")
+                    fondo = Image.new("RGBA", imageResized.size, (0,0,0,0))
                     imageComposed = Image.alpha_composite(fondo, imageResized)
-                    imageRGB = imageComposed.convert("RGB")
-                    imageTK = ImageTk.PhotoImage(imageRGB)
+                    #imageRGB = imageComposed.convert("RGB")
+                    imageTK = ImageTk.PhotoImage(imageComposed)
                     self.cache[cache_key] = imageTK
 
                 except Exception as e:
