@@ -24,6 +24,29 @@ class ImportarJson:
         except Exception as e:
             print(f"Error al guardar los datos: {e}")
 
+    def cambiar_move(self):
+        piezasJson = self.import_datos()
+        if self.nombrePieza in piezasJson:
+            for _, pieza in piezasJson.items():
+                pieza["move"] = False
+
+            piezasJson[self.nombrePieza]["move"] = True
+            self.modificar_datos(piezasJson)
+        else:
+            print("No se encontró la clave en el archivo JSON")
+
+    def default_params(self):
+        piezasJson = self.import_datos()
+        for _, piezaParams in piezasJson.items():
+            piezaParams["coordenada"] = [piezaParams["coordenada"][0]]
+            piezaParams["estado"] = "vivo"
+            piezaParams["move"] = False
+
+        self.modificar_datos(piezasJson)
+            
+
+if __name__ == "__main__":
+    ImportarJson().default_params()
 
 
         

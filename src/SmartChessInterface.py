@@ -30,6 +30,8 @@ class SmartChess:
         self.screen.geometry("1920x1080")
         self.screen.config(bg="#5c5c5c")
 
+        ImportarJson.ImportarJson().default_params()
+
         self.cache = {}
 
         self.MatrixDetectionChess = MatrixDetectionChess
@@ -280,45 +282,49 @@ class SmartChess:
         self.animacion_inicio_juego()
 
     def deteccion_entrada_piezas(self, idx=0):
+        
+        nombrePieza = self.ListaPiezas[idx][0]
+        paramPieza = self.ListaPiezas[idx][1]
+        lblPiezaSelect = self.ListaLabelsPiezas[idx]
+        
+        lblPiezaSelect.bind("<Enter>", lambda event: self.Entrada_Pieza(event))
+        lblPiezaSelect.bind("<Button-1>", lambda event: self.movimiento_piezas(event, nombrePieza, paramPieza, lblPiezaSelect))
+                
         idx += 1
         
-        self.ListaLabelsPiezas[idx-1].bind("<Enter>", lambda event: self.Entrada_Pieza(event))
-        self.ListaLabelsPiezas[idx-1].bind("<Button-1>", lambda event: self.movimiento_piezas(event, idx-1))
-                
         if(self.isWhitetime):
-            #print("Turno Blancas")
             for i in range(16,32):
                 self.ListaLabelsPiezas[i].unbind("<Button-1>")
 
-            if (idx-1 > len(self.ListaLabelsPiezas)/2 - 1):
+            if (idx >= len(self.ListaLabelsPiezas) // 2):
                 idx = 0
         else:
             #print("Turno Negras")
             for j in range(0, 16):
                 self.ListaLabelsPiezas[j].unbind("<Button-1>")
 
-            if(idx-1 > len(self.ListaLabelsPiezas) - 2):
-                idx = int(len(self.ListaLabelsPiezas)/2)
+            if(idx >= len(self.ListaLabelsPiezas)):
+                idx = int(len(self.ListaLabelsPiezas) // 2)
         
         self.screen.after(20, self.deteccion_entrada_piezas, idx)
         
     def Entrada_Pieza(self, event):
         event.widget.config(cursor="hand2")
 
-    def movimiento_piezas(self, event, idx):
-        nombrePieza = self.ListaPiezas[idx][0]
-        paramPieza = self.ListaPiezas[idx][1]
+    def movimiento_piezas(self, event, nombrePieza, paramPieza, lblPiezaSelect):
         
-        tipo = self.ListaPiezas[idx][1]["tipo"]
-        coordenada = self.ListaPiezas[idx][1]["coordenada"][-1]
+        tipo = paramPieza["tipo"]
+        coordenada = paramPieza["coordenada"][-1]
 
         match (tipo):
-            case "peon":
-                Peon = Pawn(nombrePieza, paramPieza, self.ListaPiezas)
+            case "peon":                  
+                Peon = Pawn(nombrePieza, paramPieza, lblPiezaSelect, self.cambio_turno)
+                
                 self.eliminar_puntos(self.cuadricula, self.ListaPuntos)
-                puntosActuales = Peon.puntos_primer_movimiento(self.cuadricula)
+                
+                puntosActuales = Peon.puntos_movimiento(self.cuadricula)  
                 self.ListaPuntos.append(puntosActuales)
-                print(f"Es un peon en {coordenada}")
+                
             case "torre":
                 print("Es un torre")
             case "caballo":
@@ -336,6 +342,11 @@ class SmartChess:
         for puntos in listaPuntos:
             for punto in puntos:
                 canvas.delete(punto)
+
+    def cambio_turno(self):
+        print("cambio de turno")
+        self.isWhitetime = not self.isWhitetime
+        self.eliminar_puntos(self.cuadricula, self.ListaPuntos)
 
 if __name__ == "__main__":
     screen = tk.Tk()

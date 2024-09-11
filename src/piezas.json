@@ -176,7 +176,8 @@
         "coordenada": [
             "B8"
         ],
-        "estado": "vivo"
+        "estado": "vivo",
+        "move": false
     },
     "alfilNegroC": {
         "tipo": "alfil",
@@ -276,7 +277,7 @@
             "D7"
         ],
         "estado": "vivo",
-        "move": false
+        "move": true
     },
     "peonNegroE": {
         "tipo": "peon",
