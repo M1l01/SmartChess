@@ -84,7 +84,10 @@ class Pawn:
         self.dar_paso_doble(coordenadaActual, direccion)
 
     else:
-      print(coordenadaActual)
+      if (ubiRival == (coordenadaActual[0] + str(int(coordenadaActual[1])+1))) or (ubiRival == (coordenadaActual[0] + str(int(coordenadaActual[1])-1))):
+        print("No puedes mover")
+      else:
+        self.dar_paso(coordenadaActual, direccion)
 
     return self.puntosActuales
   
