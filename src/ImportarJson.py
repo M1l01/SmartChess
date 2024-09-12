@@ -22,7 +22,6 @@ class tratamientoJson:
             print(f"Error al guardar los datos: {e}")
 
     def Almacenar_coordenada(self, casillaSelect):
-        print(self.nombrePieza)
         piezasJson = self.import_datos()
         if self.nombrePieza in piezasJson:
             for clave, piezaParams in piezasJson.items():
@@ -43,7 +42,7 @@ class tratamientoJson:
             
 
 if __name__ == "__main__":
-    tratamientoJson().Almacenar_coordenada("A3")
+    tratamientoJson().default_params()
 
 
         

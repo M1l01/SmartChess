@@ -315,11 +315,11 @@ class SmartChess:
 
         match (tipo):
             case "peon":                  
-                Peon = Pawn(nombrePieza, paramPieza, lblPiezaSelect, self.cambio_turno)
+                Peon = Pawn(self.cuadricula ,nombrePieza, lblPiezaSelect, self.cambio_turno)
                 
                 self.eliminar_puntos(self.cuadricula, self.ListaPuntos)
                 
-                puntosActuales = Peon.puntos_movimiento(self.cuadricula)  
+                puntosActuales = Peon.puntos_movimiento()  
                 self.ListaPuntos.append(puntosActuales)
                 
             case "torre":
@@ -341,7 +341,6 @@ class SmartChess:
                 canvas.delete(punto)
 
     def cambio_turno(self):
-        print("cambio de turno")
         self.isWhitetime = not self.isWhitetime
         self.eliminar_puntos(self.cuadricula, self.ListaPuntos)
 
