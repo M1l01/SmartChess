@@ -28,6 +28,7 @@ class SmartChess:
         self.screen.title("Smart Chess")
         #self.screen.overrideredirect(True)
         self.screen.geometry("1920x1080")
+        self.screen.resizable(False, False)
         self.screen.config(bg="#5c5c5c")
 
         tratamientoJson().default_params()
@@ -202,7 +203,7 @@ class SmartChess:
         for nombre, pieza in self.piezas.items():            
             lblpieza = self.lbl_Pieza(pieza["directorio"], pieza["coordenada"][0])
             self.ListaPiezas.append((nombre, pieza))
-            self.ListaLabelsPiezas.append(lblpieza)
+            self.ListaLabelsPiezas.append((nombre, lblpieza))
 
     def animacion_inicio_juego(self):
         #       """Configuración de Screen 3"""
@@ -283,7 +284,7 @@ class SmartChess:
         
         nombrePieza = self.ListaPiezas[idx][0]
         paramPieza = self.ListaPiezas[idx][1]
-        lblPiezaSelect = self.ListaLabelsPiezas[idx]
+        lblPiezaSelect = self.ListaLabelsPiezas[idx][1]
         
         lblPiezaSelect.bind("<Enter>", lambda event: self.Entrada_Pieza(event))
         lblPiezaSelect.bind("<Button-1>", lambda event: self.movimiento_piezas(event, nombrePieza, paramPieza, lblPiezaSelect))
@@ -292,14 +293,14 @@ class SmartChess:
         
         if(self.isWhitetime):
             for i in range(16,32):
-                self.ListaLabelsPiezas[i].unbind("<Button-1>")
+                self.ListaLabelsPiezas[i][1].unbind("<Button-1>")
 
             if (idx >= len(self.ListaLabelsPiezas) // 2):
                 idx = 0
         else:
             #print("Turno Negras")
             for j in range(0, 16):
-                self.ListaLabelsPiezas[j].unbind("<Button-1>")
+                self.ListaLabelsPiezas[j][1].unbind("<Button-1>")
 
             if(idx >= len(self.ListaLabelsPiezas)):
                 idx = int(len(self.ListaLabelsPiezas) // 2)
@@ -315,7 +316,7 @@ class SmartChess:
 
         match (tipo):
             case "peon":                  
-                Peon = Pawn(self.cuadricula ,nombrePieza, lblPiezaSelect, self.cambio_turno)
+                Peon = Pawn(self.cuadricula ,nombrePieza, lblPiezaSelect, self.ListaLabelsPiezas,self.cambio_turno)
                 
                 self.eliminar_puntos(self.cuadricula, self.ListaPuntos)
                 

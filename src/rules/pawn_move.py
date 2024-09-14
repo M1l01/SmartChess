@@ -27,18 +27,87 @@ from tkinter import Canvas
 from common.utils import Coords
 from ImportarJson import tratamientoJson
 
-
 class Pawn:
-  def __init__(self, canvas, nombrePieza, lblPiezaSelect, cambio_turno_callback):
+  def __init__(self, canvas, nombrePieza, lblPiezaSelect, listaLblPiezas,cambio_turno_callback):
     self.canvas = canvas
     self.nombrePieza = nombrePieza
     self.piezas = tratamientoJson().import_datos()
     self.lblPiezaSelect = lblPiezaSelect
+    self.listaLblPiezas = listaLblPiezas
 
     #   """Funciones de Callback"""
     self.cambio_turno_callback = cambio_turno_callback
 
     self.puntosActuales = []
+  
+  
+  def puntos_movimiento(self):
+    coordenadaActual = self.piezas[self.nombrePieza]["coordenada"][-1] #ultima ubicacion
+    team = self.piezas[self.nombrePieza]["team"]
+
+    direccion = 1 if team == "white" else -1
+    filaInicial = 2 if team == "white" else 7
+
+    bloqueoPeon1 = False
+    bloqueoPeon2 = False
+
+    capturaDiagDer = False
+    capturaDiagIzq = False
+
+    lblPiezaCapturaDer = None
+    lblPiezaCapturaIzq = None
+
+    #               """Movimientos"""
+    for _, piezaParams in self.piezas.items():
+      #Ultima coordenada
+      lastCoord = piezaParams["coordenada"][-1]
+      teamPieza = piezaParams["team"]
+
+      #Revisar a 1 casilla o 2 de distancia para primer movimiento
+      if lastCoord == (coordenadaActual[0] + str(int(coordenadaActual[1])+direccion)):
+        #Extraccion Coordenada
+        bloqueoPeon1 = True
+      elif lastCoord == (coordenadaActual[0] + str(int(coordenadaActual[1])+(2*direccion))):
+        bloqueoPeon2 = True
+
+      #Revisar tambien si puedo capturar
+      if coordenadaActual[0] == "A" and lastCoord == (chr(ord(coordenadaActual[0])+1) + str(int(coordenadaActual[1])+direccion)) and teamPieza != team:
+        #Revisar solo la diagonal derecha (1x1) | A2 -> B3
+        capturaDiagDer = True
+        print("Puedes capturar a la Derecha")
+
+      elif ord(coordenadaActual[0]) >= 66 or ord(coordenadaActual[0]) <= 71:
+        if lastCoord == chr(ord(coordenadaActual[0])+1) + str(int(coordenadaActual[1])+direccion):
+          #Revisar diagonal Derecha e Izquierda
+          capturaDiagDer = True
+          print("puedes capturar a la derecha")
+
+        elif lastCoord == chr(ord(coordenadaActual[0])-1) + str(int(coordenadaActual[1])+direccion):
+          capturaDiagIzq = True
+          print("puedes capturar a la izquierda")
+
+      elif coordenadaActual[0] == "H" and lastCoord == (chr(ord(coordenadaActual[0])-1) + str(int(coordenadaActual[1])+direccion)) and teamPieza != team:
+        capturaDiagIzq = True
+        print("Puedes capturar a la izquierda")
+    if bloqueoPeon1 and not capturaDiagDer and not capturaDiagIzq:
+      print("No puedes mover")
+
+    elif bloqueoPeon2 or ((int(coordenadaActual[1]) > filaInicial) if team == "white" else (int(coordenadaActual[1]) < filaInicial)):
+      self.dar_paso(coordenadaActual, direccion)
+      print("puedes dar un paso")
+
+    elif int(coordenadaActual[1]) == filaInicial:
+      self.dar_paso(coordenadaActual, direccion)
+      self.dar_paso_doble(coordenadaActual, direccion)
+      print("puedes dar hasta 2 pasos")
+
+    else:
+      print("algo anda mal")   
+     
+    return self.puntosActuales
+  
+  def captura(self, event):
+    print("Capturaste")
   
   def click_point(self, event, Coord, casillaSelect):
     bgColor = "#9e9fa2" if (((Coord[0] + Coord[1] - 60)/100)%2 == 0) else "#0d4a6a"
@@ -48,65 +117,24 @@ class Pawn:
     tratamientoJson(self.nombrePieza).Almacenar_coordenada(casillaSelect)  
     
     self.cambio_turno_callback()
-  
-  def puntos_movimiento(self):
-    coordenadaActual = self.piezas[self.nombrePieza]["coordenada"][-1] #ultima ubicacion
-    team = self.piezas[self.nombrePieza]["team"]
 
-    direccion = 1 if team == "white" else -1
-    filaInicial = 2 if team == "white" else 7
-
-    ubiRival = ""
-
-    #Ver si puede dar un paso o dos
-    for _, piezaParams in self.piezas.items():
-      #Ultima coordenada
-      lastCoord = piezaParams["coordenada"][-1]
-      if team == "white":
-        if (lastCoord == (coordenadaActual[0] + str(int(coordenadaActual[1])+1))) or (lastCoord == (coordenadaActual[0] + str(int(coordenadaActual[1])+2))):
-          #Extraccion Coordenada
-          ubiRival = lastCoord
-      else:
-        if (lastCoord == (coordenadaActual[0] + str(int(coordenadaActual[1])-1))) or (lastCoord == (coordenadaActual[0] + str(int(coordenadaActual[1])-2))):
-          #Extraccion Coordenada
-          ubiRival = lastCoord
-
-    if int(coordenadaActual[1]) == filaInicial:
-      #                 """Movimiento Inicial"""
-      if (ubiRival == (coordenadaActual[0] + str(int(coordenadaActual[1])+1))) or (ubiRival == (coordenadaActual[0] + str(int(coordenadaActual[1])-1))):
-        print("No puedes mover")
-
-      elif (ubiRival == (coordenadaActual[0] + str(int(coordenadaActual[1])+2))) or (ubiRival == (coordenadaActual[0] + str(int(coordenadaActual[1])-2))):
-        self.dar_paso(coordenadaActual, direccion)
-
-      else:
-        self.dar_paso(coordenadaActual, direccion)
-        self.dar_paso_doble(coordenadaActual, direccion)
-
-    else:
-      if (ubiRival == (coordenadaActual[0] + str(int(coordenadaActual[1])+1))) or (ubiRival == (coordenadaActual[0] + str(int(coordenadaActual[1])-1))):
-        print("No puedes mover")
-      else:
-        self.dar_paso(coordenadaActual, direccion)
-
-    return self.puntosActuales
-  
   def crear_punto(self, casilla): 
     posibleCoord = Coords().obtencion_coordenadas_piezas(casilla)
+    pointColor = "#898a8c" if (((posibleCoord[0] + posibleCoord[1] - 60)/100)%2 == 0) else "#093a54"
     x0_1, y0_1 = posibleCoord[0]-270, posibleCoord[1]-120
-    punto = self.canvas.create_oval(x0_1, y0_1, x0_1+30, y0_1+30, outline="", fill="black")
+    punto = self.canvas.create_oval(x0_1, y0_1, x0_1+30, y0_1+30, outline="", fill=pointColor)
     return punto, posibleCoord
   
   def dar_paso(self, coordenadaActual, direccion):
     nuevaFila = int(coordenadaActual[1]) + direccion
-    casilla1 = coordenadaActual[0] + str(nuevaFila)
-    punto1, posibleCoord1 = self.crear_punto(casilla1)
-    self.canvas.tag_bind(punto1, "<Button-1>", lambda event: self.click_point(event, posibleCoord1, casilla1))
-    self.puntosActuales.append(punto1)
+    casilla = coordenadaActual[0] + str(nuevaFila)
+    punto, posibleCoord = self.crear_punto(casilla)
+    self.canvas.tag_bind(punto, "<Button-1>", lambda event: self.click_point(event, posibleCoord, casilla))
+    self.puntosActuales.append(punto)
   
   def dar_paso_doble(self, coordenadaActual, direccion):
     nuevaFila = int(coordenadaActual[1]) + (2*direccion)
-    casilla2 = coordenadaActual[0] + str(nuevaFila)
-    punto2, posibleCoord2 = self.crear_punto(casilla2)
-    self.canvas.tag_bind(punto2, "<Button>", lambda event: self.click_point(event, posibleCoord2, casilla2))
-    self.puntosActuales.append(punto2)
+    casilla = coordenadaActual[0] + str(nuevaFila)
+    punto, posibleCoord = self.crear_punto(casilla)
+    self.canvas.tag_bind(punto, "<Button>", lambda event: self.click_point(event, posibleCoord, casilla))
+    self.puntosActuales.append(punto)

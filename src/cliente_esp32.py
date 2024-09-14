@@ -67,8 +67,8 @@ class ESP32Client:
             print("Conexion cerrada")
 
 if __name__ == "__main__":
-    host = "ip_ep32"
-    port = "puerto"
+    host = "ip_esp32"
+    port = "puerto_comunicacion"
     app = ESP32Client(host, port)
     while(1):
         app.connect()
