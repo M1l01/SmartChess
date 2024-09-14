@@ -48,7 +48,7 @@ class Coords:
     
 if __name__ == "__main__":
     coordenada = Coords()
-    pos = coordenada.optencion_coordenadas("B7")
+    pos = coordenada.obtencion_coordenadas_piezas("E5")
     print(pos[0])
     print(pos[1])
     

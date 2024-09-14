@@ -13,6 +13,9 @@
             "A1",
             "A1",
             "A1",
+            "A1",
+            "A1",
+            "A1",
             "A1"
         ],
         "estado": "vivo"
@@ -22,6 +25,9 @@
         "directorio": "..//SmartChess//src//images//caballo_blanco.png",
         "team": "white",
         "coordenada": [
+            "B1",
+            "B1",
+            "B1",
             "B1",
             "B1",
             "B1",
@@ -49,6 +55,9 @@
             "C1",
             "C1",
             "C1",
+            "C1",
+            "C1",
+            "C1",
             "C1"
         ],
         "estado": "vivo"
@@ -58,6 +67,9 @@
         "directorio": "..//SmartChess//src//images//dama_blanca.png",
         "team": "white",
         "coordenada": [
+            "D1",
+            "D1",
+            "D1",
             "D1",
             "D1",
             "D1",
@@ -85,6 +97,9 @@
             "E1",
             "E1",
             "E1",
+            "E1",
+            "E1",
+            "E1",
             "E1"
         ],
         "estado": "vivo"
@@ -94,6 +109,9 @@
         "directorio": "..//SmartChess//src//images//alfil_blanco.png",
         "team": "white",
         "coordenada": [
+            "F1",
+            "F1",
+            "F1",
             "F1",
             "F1",
             "F1",
@@ -121,6 +139,9 @@
             "G1",
             "G1",
             "G1",
+            "G1",
+            "G1",
+            "G1",
             "G1"
         ],
         "estado": "vivo"
@@ -130,6 +151,9 @@
         "directorio": "..//SmartChess//src//images//torre_blanca.png",
         "team": "white",
         "coordenada": [
+            "H1",
+            "H1",
+            "H1",
             "H1",
             "H1",
             "H1",
@@ -149,13 +173,16 @@
         "team": "white",
         "coordenada": [
             "A2",
-            "A4",
-            "A4",
-            "A4",
-            "A4",
-            "A4",
-            "A4",
-            "A4",
+            "A2",
+            "A2",
+            "A2",
+            "A2",
+            "A2",
+            "A2",
+            "A2",
+            "A2",
+            "A3",
+            "A3",
             "A4",
             "A4"
         ],
@@ -173,9 +200,12 @@
             "B2",
             "B2",
             "B2",
-            "B2",
-            "B2",
-            "B2"
+            "B4",
+            "B4",
+            "B4",
+            "B4",
+            "B4",
+            "B4"
         ],
         "estado": "vivo"
     },
@@ -189,11 +219,14 @@
             "C2",
             "C2",
             "C2",
-            "C3",
-            "C3",
-            "C3",
-            "C3",
-            "C3"
+            "C2",
+            "C2",
+            "C2",
+            "C2",
+            "C2",
+            "C2",
+            "C2",
+            "C2"
         ],
         "estado": "vivo"
     },
@@ -205,13 +238,16 @@
             "D2",
             "D2",
             "D2",
-            "D3",
-            "D3",
-            "D3",
-            "D3",
-            "D3",
-            "D3",
-            "D3"
+            "D2",
+            "D2",
+            "D2",
+            "D2",
+            "D2",
+            "D2",
+            "D2",
+            "D2",
+            "D2",
+            "D2"
         ],
         "estado": "vivo"
     },
@@ -221,15 +257,18 @@
         "team": "white",
         "coordenada": [
             "E2",
-            "E2",
-            "E2",
-            "E2",
-            "E2",
-            "E2",
-            "E2",
             "E3",
             "E3",
-            "E3"
+            "E3",
+            "E3",
+            "E4",
+            "E4",
+            "E4",
+            "E4",
+            "E4",
+            "E4",
+            "E4",
+            "E4"
         ],
         "estado": "vivo"
     },
@@ -241,13 +280,16 @@
             "F2",
             "F2",
             "F2",
-            "F2",
-            "F2",
-            "F2",
-            "F2",
-            "F2",
-            "F2",
-            "F3"
+            "F4",
+            "F4",
+            "F4",
+            "F4",
+            "F4",
+            "F4",
+            "F4",
+            "F4",
+            "F4",
+            "F4"
         ],
         "estado": "vivo"
     },
@@ -256,6 +298,9 @@
         "directorio": "..//SmartChess//src//images//peon_blanco.png",
         "team": "white",
         "coordenada": [
+            "G2",
+            "G2",
+            "G2",
             "G2",
             "G2",
             "G2",
@@ -283,6 +328,9 @@
             "H2",
             "H2",
             "H2",
+            "H2",
+            "H2",
+            "H2",
             "H2"
         ],
         "estado": "vivo"
@@ -292,6 +340,9 @@
         "directorio": "..//SmartChess//src//images//torre_negra.png",
         "team": "black",
         "coordenada": [
+            "A8",
+            "A8",
+            "A8",
             "A8",
             "A8",
             "A8",
@@ -319,6 +370,9 @@
             "B8",
             "B8",
             "B8",
+            "B8",
+            "B8",
+            "B8",
             "B8"
         ],
         "estado": "vivo"
@@ -328,6 +382,9 @@
         "directorio": "..//SmartChess//src//images//alfil_negro.png",
         "team": "black",
         "coordenada": [
+            "C8",
+            "C8",
+            "C8",
             "C8",
             "C8",
             "C8",
@@ -355,6 +412,9 @@
             "D8",
             "D8",
             "D8",
+            "D8",
+            "D8",
+            "D8",
             "D8"
         ],
         "estado": "vivo"
@@ -364,6 +424,9 @@
         "directorio": "..//SmartChess//src//images//rey_negro.png",
         "team": "black",
         "coordenada": [
+            "E8",
+            "E8",
+            "E8",
             "E8",
             "E8",
             "E8",
@@ -391,6 +454,9 @@
             "F8",
             "F8",
             "F8",
+            "F8",
+            "F8",
+            "F8",
             "F8"
         ],
         "estado": "vivo"
@@ -400,6 +466,9 @@
         "directorio": "..//SmartChess//src//images//caballo_negro.png",
         "team": "black",
         "coordenada": [
+            "G8",
+            "G8",
+            "G8",
             "G8",
             "G8",
             "G8",
@@ -427,6 +496,9 @@
             "H8",
             "H8",
             "H8",
+            "H8",
+            "H8",
+            "H8",
             "H8"
         ],
         "estado": "vivo"
@@ -436,6 +508,9 @@
         "directorio": "..//SmartChess//src//images//peon_negro.png",
         "team": "black",
         "coordenada": [
+            "A7",
+            "A7",
+            "A7",
             "A7",
             "A7",
             "A7",
@@ -456,14 +531,17 @@
         "coordenada": [
             "B7",
             "B7",
-            "B5",
-            "B5",
-            "B4",
-            "B4",
-            "B4",
-            "B4",
-            "B4",
-            "B4"
+            "B7",
+            "B7",
+            "B7",
+            "B7",
+            "B7",
+            "B7",
+            "B6",
+            "B6",
+            "B6",
+            "B6",
+            "B5"
         ],
         "estado": "vivo"
     },
@@ -472,6 +550,9 @@
         "directorio": "..//SmartChess//src//images//peon_negro.png",
         "team": "black",
         "coordenada": [
+            "C7",
+            "C7",
+            "C7",
             "C7",
             "C7",
             "C7",
@@ -496,10 +577,13 @@
             "D7",
             "D7",
             "D7",
+            "D7",
+            "D7",
+            "D7",
+            "D7",
             "D5",
             "D5",
-            "D4",
-            "D4"
+            "D5"
         ],
         "estado": "vivo"
     },
@@ -514,10 +598,13 @@
             "E7",
             "E7",
             "E7",
-            "E7",
-            "E7",
-            "E7",
-            "E7"
+            "E6",
+            "E6",
+            "E6",
+            "E6",
+            "E6",
+            "E6",
+            "E6"
         ],
         "estado": "vivo"
     },
@@ -530,12 +617,15 @@
             "F7",
             "F7",
             "F7",
-            "F7",
-            "F7",
-            "F7",
-            "F7",
-            "F7",
-            "F7"
+            "F5",
+            "F5",
+            "F5",
+            "F5",
+            "F5",
+            "F5",
+            "F5",
+            "F5",
+            "F5"
         ],
         "estado": "vivo"
     },
@@ -546,14 +636,17 @@
         "coordenada": [
             "G7",
             "G7",
-            "G7",
-            "G7",
-            "G7",
-            "G7",
-            "G7",
-            "G7",
-            "G7",
-            "G7"
+            "G6",
+            "G6",
+            "G6",
+            "G6",
+            "G6",
+            "G6",
+            "G6",
+            "G6",
+            "G6",
+            "G6",
+            "G6"
         ],
         "estado": "vivo"
     },
@@ -562,6 +655,9 @@
         "directorio": "..//SmartChess//src//images//peon_negro.png",
         "team": "black",
         "coordenada": [
+            "H7",
+            "H7",
+            "H7",
             "H7",
             "H7",
             "H7",

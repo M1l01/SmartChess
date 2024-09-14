@@ -45,6 +45,8 @@ class Pawn:
     coordenadaActual = self.piezas[self.nombrePieza]["coordenada"][-1] #ultima ubicacion
     team = self.piezas[self.nombrePieza]["team"]
 
+    print(coordenadaActual)
+
     direccion = 1 if team == "white" else -1
     filaInicial = 2 if team == "white" else 7
 
@@ -54,41 +56,53 @@ class Pawn:
     capturaDiagDer = False
     capturaDiagIzq = False
 
-    lblPiezaCapturaDer = None
-    lblPiezaCapturaIzq = None
+    nombrePiezaCapturaDer = ""
+    nombrePiezaCapturaIzq = ""
 
-    #               """Movimientos"""
-    for _, piezaParams in self.piezas.items():
+    for clave, piezaParams in self.piezas.items():
       #Ultima coordenada
       lastCoord = piezaParams["coordenada"][-1]
       teamPieza = piezaParams["team"]
 
-      #Revisar a 1 casilla o 2 de distancia para primer movimiento
+      #                     """Movimientos"""
       if lastCoord == (coordenadaActual[0] + str(int(coordenadaActual[1])+direccion)):
-        #Extraccion Coordenada
+        # Pieza a una casilla bloqueando
         bloqueoPeon1 = True
+
       elif lastCoord == (coordenadaActual[0] + str(int(coordenadaActual[1])+(2*direccion))):
+        # Pieza a dos casillas bloqueando
         bloqueoPeon2 = True
 
-      #Revisar tambien si puedo capturar
+      #                       """Capturas"""
       if coordenadaActual[0] == "A" and lastCoord == (chr(ord(coordenadaActual[0])+1) + str(int(coordenadaActual[1])+direccion)) and teamPieza != team:
-        #Revisar solo la diagonal derecha (1x1) | A2 -> B3
+        #Revisar solo la diagonal Derecha
         capturaDiagDer = True
+        #Extraer el nombre de la pieza
+        nombrePiezaCapturaDer = clave
         print("Puedes capturar a la Derecha")
 
-      elif ord(coordenadaActual[0]) >= 66 or ord(coordenadaActual[0]) <= 71:
+      elif (ord(coordenadaActual[0]) >= 66 or ord(coordenadaActual[0]) <= 71) and teamPieza != team:
+        #Revisar diagonal Derecha e Izquierda
         if lastCoord == chr(ord(coordenadaActual[0])+1) + str(int(coordenadaActual[1])+direccion):
-          #Revisar diagonal Derecha e Izquierda
           capturaDiagDer = True
+          #Extraer el nombre de la pieza
+          nombrePiezaCapturaDer = clave
           print("puedes capturar a la derecha")
 
-        elif lastCoord == chr(ord(coordenadaActual[0])-1) + str(int(coordenadaActual[1])+direccion):
+        elif lastCoord == chr(ord(coordenadaActual[0])-1) + str(int(coordenadaActual[1])+direccion) and teamPieza != team:
           capturaDiagIzq = True
+          #Extraer el nombre de la pieza
+          nombrePiezaCapturaIzq = clave
           print("puedes capturar a la izquierda")
 
       elif coordenadaActual[0] == "H" and lastCoord == (chr(ord(coordenadaActual[0])-1) + str(int(coordenadaActual[1])+direccion)) and teamPieza != team:
+        #Revisar solo diagonal Izquierda
         capturaDiagIzq = True
+        #Extraer el nombre de la pieza
+        nombrePiezaCapturaIzq = clave
         print("Puedes capturar a la izquierda")
+
+    #               """Movimientos"""
     if bloqueoPeon1 and not capturaDiagDer and not capturaDiagIzq:
       print("No puedes mover")
 
@@ -102,12 +116,57 @@ class Pawn:
       print("puedes dar hasta 2 pasos")
 
     else:
-      print("algo anda mal")   
+      print("algo anda mal")
+
+    #                 """Capturas"""
+    if capturaDiagDer and not capturaDiagIzq and team:
+      self.captura_derecha_lbl(nombrePiezaCapturaDer)
+      self.captura_derecha(coordenadaActual, direccion)
+
+    elif capturaDiagIzq and not capturaDiagDer:
+      self.captura_izquierda(coordenadaActual, direccion)
+
+    elif capturaDiagDer and capturaDiagIzq:
+      self.captura_derecha(coordenadaActual, direccion)
+      self.captura_izquierda(coordenadaActual, direccion)
+    else:
+      print("No hay capturas")
      
     return self.puntosActuales
   
-  def captura(self, event):
-    print("Capturaste")
+  def click_cuadro(self, event, Coord, casillaSelect):
+    print("capturaste")
+
+  def click_pieza(self, event):
+    print("Label de la Pieza pulsada -> Capturaste")
+
+  def captura_derecha_lbl(self, nombreCapturaDer):
+    lblPiezaCapturaDer = None
+    for nombrePieza, lblPieza in self.listaLblPiezas:
+      if nombrePieza == nombreCapturaDer:
+        lblPiezaCapturaDer = lblPieza
+
+    if lblPiezaCapturaDer != None:
+      print("boton activado")
+      lblPiezaCapturaDer.bind("<Button-1>", self.click_pieza)
+  
+  def captura_derecha(self, coordenadaActual, direccion):
+    casilla = chr(ord(coordenadaActual[0])+1) + str(int(coordenadaActual[1])+direccion)
+    cuadro, posibleCoord = self.crear_cuadro_captura(casilla)
+    self.canvas.tag_bind(cuadro, "<Button-1>", lambda event: self.click_cuadro(event, posibleCoord, casilla))
+    self.puntosActuales.append(cuadro)
+
+  def captura_izquierda(self, coordenadaActual, direccion):
+    casilla = chr(ord(coordenadaActual[0])-1) + str(int(coordenadaActual[1])+direccion)
+    cuadro, posibleCoord = self.crear_cuadro_captura(casilla)
+    self.canvas.tag_bind(cuadro, "<Button-1>", lambda event: self.click_cuadro(event, posibleCoord, casilla))
+    self.puntosActuales.append(cuadro)
+
+  def crear_cuadro_captura(self, casilla):
+    posibleCoord = Coords().obtencion_coordenadas_piezas(casilla)
+    x0, y0 = posibleCoord[0]-305, posibleCoord[1]-155
+    cuadro = self.canvas.create_rectangle(x0, y0, x0+100, y0+100, outline="", fill="#f00")
+    return cuadro, posibleCoord
   
   def click_point(self, event, Coord, casillaSelect):
     bgColor = "#9e9fa2" if (((Coord[0] + Coord[1] - 60)/100)%2 == 0) else "#0d4a6a"
@@ -121,8 +180,8 @@ class Pawn:
   def crear_punto(self, casilla): 
     posibleCoord = Coords().obtencion_coordenadas_piezas(casilla)
     pointColor = "#898a8c" if (((posibleCoord[0] + posibleCoord[1] - 60)/100)%2 == 0) else "#093a54"
-    x0_1, y0_1 = posibleCoord[0]-270, posibleCoord[1]-120
-    punto = self.canvas.create_oval(x0_1, y0_1, x0_1+30, y0_1+30, outline="", fill=pointColor)
+    x0, y0 = posibleCoord[0]-270, posibleCoord[1]-120
+    punto = self.canvas.create_oval(x0, y0, x0+30, y0+30, outline="", fill=pointColor)
     return punto, posibleCoord
   
   def dar_paso(self, coordenadaActual, direccion):

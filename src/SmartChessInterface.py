@@ -316,8 +316,7 @@ class SmartChess:
 
         match (tipo):
             case "peon":                  
-                Peon = Pawn(self.cuadricula ,nombrePieza, lblPiezaSelect, self.ListaLabelsPiezas,self.cambio_turno)
-                
+                Peon = Pawn(self.cuadricula ,nombrePieza, lblPiezaSelect, self.ListaLabelsPiezas, self.cambio_turno)
                 self.eliminar_puntos(self.cuadricula, self.ListaPuntos)
                 
                 puntosActuales = Peon.puntos_movimiento()  
