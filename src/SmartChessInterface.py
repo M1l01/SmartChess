@@ -57,6 +57,7 @@ class SmartChess:
         self.ListaPiezas = []
         self.ListaLabelsPiezas = []
         self.ListaPuntos = []
+        self.listaCanvasCaptura = []
 
         #       """Variables Globales"""
         # Menu Inicio
@@ -311,15 +312,15 @@ class SmartChess:
         event.widget.config(cursor="hand2")
 
     def movimiento_piezas(self, event, nombrePieza, paramPieza, lblPiezaSelect):
-        
         tipo = paramPieza["tipo"]
 
         match (tipo):
-            case "peon":                  
-                Peon = Pawn(self.cuadricula ,nombrePieza, lblPiezaSelect, self.ListaLabelsPiezas, self.cambio_turno)
+            case "peon":        
+                Peon = Pawn(self.screen, self.cuadricula, nombrePieza, lblPiezaSelect, self.ListaLabelsPiezas, self.cambio_turno)
+                self.eliminar_canvas()
                 self.eliminar_puntos(self.cuadricula, self.ListaPuntos)
                 
-                puntosActuales = Peon.puntos_movimiento()  
+                puntosActuales, self.listaCanvasCaptura = Peon.movimientos()  
                 self.ListaPuntos.append(puntosActuales)
                 
             case "torre":
@@ -339,6 +340,13 @@ class SmartChess:
         for puntos in listaPuntos:
             for punto in puntos:
                 canvas.delete(punto)
+
+    def eliminar_canvas(self):
+        if len(self.listaCanvasCaptura) > 0:
+            for object in self.listaCanvasCaptura:
+                object.destroy()
+        else:
+            print("No hay elementos que eliminar")
 
     def cambio_turno(self):
         self.isWhitetime = not self.isWhitetime

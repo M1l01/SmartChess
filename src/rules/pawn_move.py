@@ -28,8 +28,10 @@ from common.utils import Coords
 from ImportarJson import tratamientoJson
 
 class Pawn:
-  def __init__(self, canvas, nombrePieza, lblPiezaSelect, listaLblPiezas,cambio_turno_callback):
+  def __init__(self, screen, canvas, nombrePieza, lblPiezaSelect, listaLblPiezas,cambio_turno_callback):
+    self.screen = screen
     self.canvas = canvas
+    self.puntoCaptura = Canvas(self.screen, width=30, height=30, highlightthickness=0, background="#f00")
     self.nombrePieza = nombrePieza
     self.piezas = tratamientoJson().import_datos()
     self.lblPiezaSelect = lblPiezaSelect
@@ -39,9 +41,10 @@ class Pawn:
     self.cambio_turno_callback = cambio_turno_callback
 
     self.puntosActuales = []
+    self.listaCanvas = []
   
   
-  def puntos_movimiento(self):
+  def movimientos(self):
     coordenadaActual = self.piezas[self.nombrePieza]["coordenada"][-1] #ultima ubicacion
     team = self.piezas[self.nombrePieza]["team"]
 
@@ -120,7 +123,6 @@ class Pawn:
 
     #                 """Capturas"""
     if capturaDiagDer and not capturaDiagIzq and team:
-      self.captura_derecha_lbl(nombrePiezaCapturaDer)
       self.captura_derecha(coordenadaActual, direccion)
 
     elif capturaDiagIzq and not capturaDiagDer:
@@ -129,51 +131,22 @@ class Pawn:
     elif capturaDiagDer and capturaDiagIzq:
       self.captura_derecha(coordenadaActual, direccion)
       self.captura_izquierda(coordenadaActual, direccion)
+
     else:
       print("No hay capturas")
      
-    return self.puntosActuales
+    return self.puntosActuales, self.listaCanvas
   
-  def click_cuadro(self, event, Coord, casillaSelect):
-    print("capturaste")
+  #                     """Funciones de Movimiento"""
 
-  def click_pieza(self, event):
-    print("Label de la Pieza pulsada -> Capturaste")
-
-  def captura_derecha_lbl(self, nombreCapturaDer):
-    lblPiezaCapturaDer = None
-    for nombrePieza, lblPieza in self.listaLblPiezas:
-      if nombrePieza == nombreCapturaDer:
-        lblPiezaCapturaDer = lblPieza
-
-    if lblPiezaCapturaDer != None:
-      print("boton activado")
-      lblPiezaCapturaDer.bind("<Button-1>", self.click_pieza)
-  
-  def captura_derecha(self, coordenadaActual, direccion):
-    casilla = chr(ord(coordenadaActual[0])+1) + str(int(coordenadaActual[1])+direccion)
-    cuadro, posibleCoord = self.crear_cuadro_captura(casilla)
-    self.canvas.tag_bind(cuadro, "<Button-1>", lambda event: self.click_cuadro(event, posibleCoord, casilla))
-    self.puntosActuales.append(cuadro)
-
-  def captura_izquierda(self, coordenadaActual, direccion):
-    casilla = chr(ord(coordenadaActual[0])-1) + str(int(coordenadaActual[1])+direccion)
-    cuadro, posibleCoord = self.crear_cuadro_captura(casilla)
-    self.canvas.tag_bind(cuadro, "<Button-1>", lambda event: self.click_cuadro(event, posibleCoord, casilla))
-    self.puntosActuales.append(cuadro)
-
-  def crear_cuadro_captura(self, casilla):
-    posibleCoord = Coords().obtencion_coordenadas_piezas(casilla)
-    x0, y0 = posibleCoord[0]-305, posibleCoord[1]-155
-    cuadro = self.canvas.create_rectangle(x0, y0, x0+100, y0+100, outline="", fill="#f00")
-    return cuadro, posibleCoord
-  
   def click_point(self, event, Coord, casillaSelect):
     bgColor = "#9e9fa2" if (((Coord[0] + Coord[1] - 60)/100)%2 == 0) else "#0d4a6a"
     self.lblPiezaSelect.config(bg = bgColor)
     self.lblPiezaSelect.place(x=Coord[0], y=Coord[1])
-
-    tratamientoJson(self.nombrePieza).Almacenar_coordenada(casillaSelect)  
+    
+    self.puntoCaptura.destroy()
+    
+    tratamientoJson(self.nombrePieza).Almacenar_coordenada(casillaSelect) 
     
     self.cambio_turno_callback()
 
@@ -197,3 +170,31 @@ class Pawn:
     punto, posibleCoord = self.crear_punto(casilla)
     self.canvas.tag_bind(punto, "<Button>", lambda event: self.click_point(event, posibleCoord, casilla))
     self.puntosActuales.append(punto)
+
+  #                   """Funciones de Captura"""
+
+  def click_cuadro(self, event, posibleCoord):
+    print("capturaste")
+  
+  def captura_derecha(self, coordenadaActual, direccion):
+    casilla = chr(ord(coordenadaActual[0])+1) + str(int(coordenadaActual[1])+direccion)
+    posibleCoord, cuadro = self.crear_cuadro_captura(casilla)
+    self.puntoCaptura.bind("<Button-1>", lambda event: self.click_cuadro(event, posibleCoord))
+    self.puntosActuales.append(cuadro)
+    self.listaCanvas.append(self.puntoCaptura)
+
+  def captura_izquierda(self, coordenadaActual, direccion):
+    casilla = chr(ord(coordenadaActual[0])-1) + str(int(coordenadaActual[1])+direccion)
+    posibleCoord, cuadro = self.crear_cuadro_captura(casilla)
+    self.puntoCaptura.bind("<Button-1>", lambda event: self.click_cuadro(event, posibleCoord))
+    self.puntosActuales.append(cuadro)
+    self.listaCanvas.append(self.puntoCaptura)
+
+  def crear_cuadro_captura(self, casilla):
+    posibleCoord = Coords().obtencion_coordenadas_piezas(casilla)
+    self.puntoCaptura.place(x=posibleCoord[0]+30, y=posibleCoord[1]+30)
+    x0, y0 = posibleCoord[0]-305, posibleCoord[1]-155
+    cuadro = self.canvas.create_rectangle(x0, y0, x0+100, y0+100, outline="", fill="#f00")
+    return posibleCoord, cuadro
+  
+  
