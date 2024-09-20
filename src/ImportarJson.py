@@ -35,8 +35,7 @@ class tratamientoJson:
     def cambio_estado(self, nuevoEstado):
         piezasJson = self.import_datos()
         if self.nombrePieza in piezasJson:
-            for _, piezaParams in piezasJson.items():
-                piezaParams["estado"] = nuevoEstado
+            piezasJson[self.nombrePieza]["estado"] = nuevoEstado
             self.modificar_datos(piezasJson)
         else:
             print("No se encuentra esa pieza")

@@ -31,7 +31,8 @@ class Pawn:
   def __init__(self, screen, canvas, nombrePieza, lblPiezaSelect, listaLblPiezas,cambio_turno_callback):
     self.screen = screen
     self.canvas = canvas
-    self.puntoCaptura = Canvas(self.screen, width=30, height=30, highlightthickness=0, background="#f00")
+    self.puntoCapturaDer = Canvas(self.screen, width=30, height=30, highlightthickness=0, background="#f00")
+    self.puntoCapturaIzq = Canvas(self.screen, width=30, height=30, highlightthickness=0, background="#f00")
     self.nombrePieza = nombrePieza
     self.piezas = tratamientoJson().import_datos()
     self.lblPiezaSelect = lblPiezaSelect
@@ -66,25 +67,31 @@ class Pawn:
       #Ultima coordenada
       lastCoord = piezaParams["coordenada"][-1]
       teamPieza = piezaParams["team"]
+      estadoPieza = piezaParams["estado"]
 
       #                     """Movimientos"""
-      if lastCoord == (coordenadaActual[0] + str(int(coordenadaActual[1])+direccion)):
+      if lastCoord == "P8":
+        continue
+
+      elif lastCoord == (coordenadaActual[0] + str(int(coordenadaActual[1])+direccion)):
         # Pieza a una casilla bloqueando
         self.bloqueoPeon1 = True
+        print("Pieza bloqueando a una casilla")
 
       elif lastCoord == (coordenadaActual[0] + str(int(coordenadaActual[1])+(2*direccion))):
         # Pieza a dos casillas bloqueando
         self.bloqueoPeon2 = True
+        print("Pieza bloqueando a 2 casillas")
 
       #                       """Capturas"""
-      if coordenadaActual[0] == "A" and lastCoord == (chr(ord(coordenadaActual[0])+1) + str(int(coordenadaActual[1])+direccion)) and teamPieza != team:
+      if coordenadaActual[0] == "A" and lastCoord == (chr(ord(coordenadaActual[0])+1) + str(int(coordenadaActual[1])+direccion)) and teamPieza != team and estadoPieza != "muerto":
         #Revisar solo la diagonal Derecha
         self.capturaDiagDer = True
         #Extraer el nombre de la pieza
         self.nombrePiezaCapturaDer = clave
         print("Puedes capturar a la Derecha")
 
-      elif (ord(coordenadaActual[0]) >= 66 or ord(coordenadaActual[0]) <= 71) and teamPieza != team:
+      elif (ord(coordenadaActual[0]) >= 66 or ord(coordenadaActual[0]) <= 71) and teamPieza != team and estadoPieza != "muerto":
         #Revisar diagonal Derecha e Izquierda
         if lastCoord == chr(ord(coordenadaActual[0])+1) + str(int(coordenadaActual[1])+direccion):
           self.capturaDiagDer = True
@@ -98,7 +105,7 @@ class Pawn:
           self.nombrePiezaCapturaIzq = clave
           print("puedes capturar a la izquierda")
 
-      elif coordenadaActual[0] == "H" and lastCoord == (chr(ord(coordenadaActual[0])-1) + str(int(coordenadaActual[1])+direccion)) and teamPieza != team:
+      elif coordenadaActual[0] == "H" and lastCoord == (chr(ord(coordenadaActual[0])-1) + str(int(coordenadaActual[1])+direccion)) and teamPieza != team and estadoPieza != "muerto":
         #Revisar solo diagonal Izquierda
         self.capturaDiagIzq = True
         #Extraer el nombre de la pieza
@@ -122,15 +129,15 @@ class Pawn:
       print("algo anda mal")
 
     #                 """Capturas"""
-    if self.capturaDiagDer and not self.capturaDiagIzq and team:
+    if self.capturaDiagDer and not self.capturaDiagIzq:
       self.captura_derecha(coordenadaActual, direccion)
 
     elif self.capturaDiagIzq and not self.capturaDiagDer:
       self.captura_izquierda(coordenadaActual, direccion)
 
     elif self.capturaDiagDer and self.capturaDiagIzq:
-      self.captura_derecha(coordenadaActual, direccion)
       self.captura_izquierda(coordenadaActual, direccion)
+      self.captura_derecha(coordenadaActual, direccion)
 
     else:
       print("No hay capturas")
@@ -143,7 +150,8 @@ class Pawn:
     bgColor = "#9e9fa2" if (((Coord[0] + Coord[1] - 60)/100)%2 == 0) else "#0d4a6a"
     self.lblPiezaSelect.config(bg = bgColor)
     self.lblPiezaSelect.place(x=Coord[0], y=Coord[1])
-    self.puntoCaptura.destroy() 
+    self.puntoCapturaIzq.destroy()
+    self.puntoCapturaDer.destroy()
     tratamientoJson(self.nombrePieza).Almacenar_coordenada(casillaSelect) 
     self.cambio_turno_callback()
   
@@ -170,45 +178,65 @@ class Pawn:
 
   #                   """Funciones de Captura"""
 
-  def click_cuadro(self, event, Coord, lblpiezaCaptura, casillaSelect):
+  def click_cuadro_der(self, event, Coord, lblpiezaCaptura, casillaSelect):
+    tratamientoJson(self.nombrePiezaCapturaDer).Almacenar_coordenada("P8")
+    tratamientoJson(self.nombrePiezaCapturaDer).cambio_estado("muerto")
+
+    self.click_cuadro(Coord, lblpiezaCaptura, casillaSelect)
+
+  def click_cuadro_izq(self, event, Coord, lblpiezaCaptura, casillaSelect): 
+    tratamientoJson(self.nombrePiezaCapturaIzq).Almacenar_coordenada("P8")
+    tratamientoJson(self.nombrePiezaCapturaIzq).cambio_estado("muerto")
+
+    self.click_cuadro(Coord, lblpiezaCaptura, casillaSelect)
+
+  def click_cuadro(self, Coord, lblpiezaCaptura, casillaSelect):
     lblpiezaCaptura.place(x=2000, y=2000)
     bgColor = "#9e9fa2" if (((Coord[0] + Coord[1] - 60)/100)%2 == 0) else "#0d4a6a"
     self.lblPiezaSelect.config(bg = bgColor)
     self.lblPiezaSelect.place(x=Coord[0], y=Coord[1])
     tratamientoJson(self.nombrePieza).Almacenar_coordenada(casillaSelect)
-    self.puntoCaptura.destroy()
+
+    self.puntoCapturaIzq.destroy()
+    self.puntoCapturaDer.destroy()
     self.cambio_turno_callback()
     print("capturaste")
   
   def captura_derecha(self, coordenadaActual, direccion):
     casilla = chr(ord(coordenadaActual[0])+1) + str(int(coordenadaActual[1])+direccion)
-    posibleCoord, cuadro = self.crear_cuadro_captura(casilla)
+    posibleCoord = Coords().obtencion_coordenadas_piezas(casilla)
+    self.puntoCapturaDer.place(x=posibleCoord[0]+30, y=posibleCoord[1]+30)
+    x0, y0 = posibleCoord[0]-305, posibleCoord[1]-155
+    cuadro = self.canvas.create_rectangle(x0, y0, x0+100, y0+100, outline="", fill="#f00")
 
     for nombreClave, lblpieza in self.listaLblPiezas:
       if nombreClave == self.nombrePiezaCapturaDer:
         lblpiezaCapturaDer = lblpieza
 
-    self.puntoCaptura.bind("<Button-1>", lambda event: self.click_cuadro(event, posibleCoord, lblpiezaCapturaDer, casilla))
+    self.puntoCapturaDer.bind("<Button-1>", lambda event: self.click_cuadro_der(event, posibleCoord, lblpiezaCapturaDer, casilla))
     self.puntosActuales.append(cuadro)
-    self.listaCanvas.append(self.puntoCaptura)
+    self.listaCanvas.append(self.puntoCapturaDer)
 
   def captura_izquierda(self, coordenadaActual, direccion):
     casilla = chr(ord(coordenadaActual[0])-1) + str(int(coordenadaActual[1])+direccion)
-    posibleCoord, cuadro = self.crear_cuadro_captura(casilla)
+    posibleCoord = Coords().obtencion_coordenadas_piezas(casilla)
+    self.puntoCapturaIzq.place(x=posibleCoord[0]+30, y=posibleCoord[1]+30)
+    x0, y0 = posibleCoord[0]-305, posibleCoord[1]-155
+    cuadro = self.canvas.create_rectangle(x0, y0, x0+100, y0+100, outline="", fill="#f00")
 
     for nombreClave, lblpieza in self.listaLblPiezas:
       if nombreClave == self.nombrePiezaCapturaIzq:
         lblpiezaCapturaIzq = lblpieza
 
-    self.puntoCaptura.bind("<Button-1>", lambda event: self.click_cuadro(event, posibleCoord, lblpiezaCapturaIzq, casilla))
+    self.puntoCapturaIzq.bind("<Button-1>", lambda event: self.click_cuadro_izq(event, posibleCoord, lblpiezaCapturaIzq, casilla))
     self.puntosActuales.append(cuadro)
-    self.listaCanvas.append(self.puntoCaptura)
-
+    self.listaCanvas.append(self.puntoCapturaIzq)
+"""
   def crear_cuadro_captura(self, casilla):
     posibleCoord = Coords().obtencion_coordenadas_piezas(casilla)
     self.puntoCaptura.place(x=posibleCoord[0]+30, y=posibleCoord[1]+30)
     x0, y0 = posibleCoord[0]-305, posibleCoord[1]-155
     cuadro = self.canvas.create_rectangle(x0, y0, x0+100, y0+100, outline="", fill="#f00")
     return posibleCoord, cuadro
-  
+"""
   
